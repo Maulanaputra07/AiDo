@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
@@ -190,27 +191,59 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             border: Border.all(color: Colors.black),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Plan for the day",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Task a",
-                style: TextStyle(fontSize: 18),
-              ),
-              Text(
-                "Task b",
-                style: TextStyle(fontSize: 18),
-              ),
-              Text(
-                "Task c",
-                style: TextStyle(fontSize: 18),
-              ),
-            ],
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+            .collection("tasks")
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+            builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                return const Text("Tidak ada task untuk hari ini");
+              }
+
+              final tasks = snapshot.data!.docs;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Plan for the day",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index){
+                        final task = tasks[index];
+                        final title = task['title'];
+                        final isDone = task['isDone'] ?? false;
+
+                        return Row(
+                          children: [
+                            Icon(
+                              isDone
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(title),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
           ),
         ),
       ),
