@@ -1,37 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../providers/task_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return const MyHomePage(title: "Welcome to AiDo");
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MyHomePage(title: "Welcome to AiDo");
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget {
+  final String title;
+  // final AsyncValue<QuerySnapshot> taskStream;
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   Map<String, String> getFormattedDate(){
     final now = DateTime.now();
@@ -52,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[900],
         toolbarHeight: 100,
         title: Container(
           margin: EdgeInsets.only(left: 16.0, top: 7.0),
@@ -62,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text(
               widget.title,
               style: TextStyle(
+                color: Colors.white,
                 fontSize: 30,
                 height: 1.2,
                 fontWeight: FontWeight.bold
@@ -79,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    // color: Colors.lightGreen,
+                    // color: Colors.white,
                     padding: EdgeInsets.all(16.0),
                     width: double.infinity,
                     child: SingleChildScrollView(
@@ -123,13 +117,33 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               SizedBox(height: 8),
-                              Text(
-                                "0",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              )
+                              Consumer(builder: (context, ref, _) {
+                                final taskStream= ref.watch(taskStreamProvider(false));
+
+                                return taskStream.when(
+                                  data: (tasks) => Text("${tasks.length}",
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  loading: () => const Text(
+                                    "...",
+                                    style: TextStyle(fontSize: 24),
+                                  ),
+                                  error: (err, stack) {
+                                    // print("error : ${err}");
+                                    return Text("!", style: TextStyle(color: Colors.red));
+                                  }
+                                );
+                              }),
+                              // Text(
+                              //   "0",
+                              //   style: TextStyle(
+                              //     fontSize: 24,
+                              //     fontWeight: FontWeight.bold
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -173,136 +187,148 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(height: 20),
 
                 Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16),
-  child: Row(
-    children: [
-      // Bagian kiri dengan Plan for the day
-      Expanded(
-        flex: 2,
-        child: Container(
-          height: 200,
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(17),
-              topRight: Radius.circular(17),
-              bottomRight: Radius.circular(17),
-            ),
-            border: Border.all(color: Colors.black),
-          ),
-          child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-            .collection("tasks")
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-            builder: (context, snapshot){
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-                return const Text("Tidak ada task untuk hari ini");
-              }
-
-              final tasks = snapshot.data!.docs;
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Plan for the day",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index){
-                        final task = tasks[index];
-                        final title = task['title'];
-                        final isDone = task['isDone'] ?? false;
-
-                        return Row(
-                          children: [
-                            Icon(
-                              isDone
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                              size: 18,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      // Bagian kiri dengan Plan for the day
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          height: 200,
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(17),
+                              topRight: Radius.circular(17),
+                              bottomRight: Radius.circular(17),
                             ),
-                            const SizedBox(width: 8),
-                            Text(title),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Consumer(
+                            builder:(context, ref, _) {
+                              final taskStream = ref.watch(taskStreamProvider(true));
+
+                              return taskStream.when(
+                                data: (tasks){
+                                  if(tasks.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        "Tidak ada task hari ini",
+                                        style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                        ),
+                                    );
+                                    // const Text(
+                                    //   "Tidak ada task untuk hari ini",
+                                    //   style: TextStyle(
+                                    //     fontSize: 30
+                                    //   ),
+                                    // );
+                                  }
+
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Task untuk hari ini",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Expanded(
+                                        child: ListView.builder(
+                                          itemCount: tasks.length,
+                                          itemBuilder: (context, index){
+                                            final task = tasks[index];
+                                            return Row(
+                                              children: [
+                                                Icon(
+                                                  task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+                                                  size: 19,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  task.title,
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                  ),
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }, 
+                                loading: () => const CircularProgressIndicator(),
+                                error: (e, _) => Text('error : $e'), 
+                                );
+                            },
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 16),
+
+                      // Bagian kanan dengan dua Completed tasks
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                            Container(
+                              // container ini akan saya gunakan untuk tanggal hari ini
+                              height: 100,
+                              width: 500,
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.black),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${dateParts['dayName']}",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                      "${dateParts['date']}",
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 16),
+
+                            Container(
+                              // container ini akan saya gunakan untuk jam saat ini
+                              height: 80,
+                              width: 500,
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: Center(
+                                child: RealTimeClock(),
+                              )
+                            ),
                           ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-
-      SizedBox(width: 16),
-
-      // Bagian kanan dengan dua Completed tasks
-      Expanded(
-        flex: 1,
-        child: Column(
-          children: [
-            Container(
-              // container ini akan saya gunakan untuk tanggal hari ini
-              height: 100,
-              width: 500,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${dateParts['dayName']}",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                      "${dateParts['date']}",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 16),
-
-            Container(
-              // container ini akan saya gunakan untuk jam saat ini
-              height: 80,
-              width: 500,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Center(
-                child: RealTimeClock(),
-              )
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-),
+                ),
 
               ],
             ),
@@ -344,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget navButton(String label, IconData icon){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: ElevatedButton.icon(onPressed: 
       (){
 
@@ -358,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: Colors.black),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.amber[50],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0)
         ),
