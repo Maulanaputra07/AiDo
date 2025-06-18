@@ -28,6 +28,7 @@ class TaskRepository {
     await _db.collection('tasks').add({
       'title' : task.title,
       'isDone' : task.isDone,
+      'subTasks' : task.subTasks.map((sub) => sub.toMap()).toList(),
       'createdAt' : Timestamp.fromDate(task.createdAt),
     });
   }
