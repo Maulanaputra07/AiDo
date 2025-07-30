@@ -1,0 +1,12 @@
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+
+  background_image: "assets/backgroundAiDo.png"
+  image: "assets/icons/aido.png"
+
+  android_12:
+    color: "#1483C2"
+    image: "assets/icons/aidoAndroid.png"
