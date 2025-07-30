@@ -60,6 +60,16 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Helvetica
+      fonts:
+        - asset: assets/fonts/Helvetica-Bold.ttf
+    - family: Geova
+      fonts:
+        - asset: assets/fonts/GeovaTrial-Bold.ttf
+    - family: Inknut
+      fonts:
+        - asset: assets/fonts/InknutAntiqua-SemiBold.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

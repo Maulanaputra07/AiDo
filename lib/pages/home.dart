@@ -11,7 +11,7 @@ class HomePage extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MyHomePage(title: "Welcome to AiDo");
+    return MyHomePage(title: "AiDo");
   }
 }
 
@@ -45,19 +45,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Color(0xFFFAFAFA),
         toolbarHeight: 100,
         title: Container(
           margin: EdgeInsets.only(left: 16.0, top: 7.0),
           child: SizedBox(
-            width: 300,
+            width: 800,
             height: 60,
             child: Text(
               widget.title,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
+                fontFamily: 'Inknut',
+                color: Colors.blueAccent,
+                fontSize: 50,
                 height: 1.2,
+                letterSpacing: -2.5,
                 fontWeight: FontWeight.bold
               ),
             ),
@@ -384,7 +386,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       ),
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: Colors.black),
-        backgroundColor: Colors.amber[50],
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0)
         ),
