@@ -47,7 +47,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFAFAFA),
-        toolbarHeight: 100,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 80,
         title: Container(
           margin: EdgeInsets.only(left: 16.0, top: 7.0),
           child: SizedBox(
@@ -79,18 +81,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     width: double.infinity,
                     child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     navButton("home", Icons.home),
-                    //     navButton("Tasks", Icons.list_alt),
-                    //     navButton("Completed", Icons.check),
-                    //     navButton("Smart Tips", Icons.lightbulb),
-                    //     navButton("Stats", Icons.bar_chart),
-                    //     navButton("Reminders", Icons.notifications),
-                    //     navButton("Settings", Icons.settings),
-                    //   ],
-                    // ),
                   ),
                 ),
 
@@ -220,14 +210,82 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
                       SizedBox(height: 16),
 
-                      Container(
-                          height: 120,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(17),
-                            border: Border.all(color: Colors.black)
-                          ),
-                        ),
+                      Consumer(
+                            builder: (context, ref, _){
+                              final taskStream = ref.watch(taskStreamProvider(true));
+
+                              return taskStream.when(
+                                data: (tasks){
+                                  if(tasks.isEmpty){
+                                    return Center(
+                                      child: Text(
+                                        "Anda belum memilik task untuk hari ini",
+                                        style: TextStyle(
+                                          fontFamily: "Instrument",
+                                          fontSize: 27,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: tasks.length,
+                                      itemBuilder: (context, index){
+                                        final task = tasks[index];
+                                        return Container(
+                                          height: 120,
+                                          margin: EdgeInsets.only(bottom:12),
+                                          padding: EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(17),
+                                            border: Border.all(color: Colors.black),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color(0xFFC2C6CE),
+                                                spreadRadius: 2,
+                                                offset: Offset(2, 2)
+                                              )
+                                            ],
+                                            color: Color(0xFFFAFAFA)
+                                          ),
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  task.title,
+                                                  style: TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0xFF1483C2)
+                                                  ),
+                                                ),
+                                                SizedBox(height: 2),
+                                                Text(
+                                                  "${task.subTasks.length} subtask",
+                                                  style: TextStyle(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Color(0xFF1483C2)
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ),
+                                        );
+                                      }
+                                    );
+                                }, 
+                                error: (e, _) => Text('error: $e'), 
+                                loading: () => Center(child: Text("Loading.."))
+                              );
+                            },
+                          )
                       // Bagian kiri dengan Plan for the day
                     
 
@@ -308,7 +366,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       //   ),
                       // ),
 
-                      SizedBox(width: 16),
+                      // SizedBox(width: 16),
 
                       // Bagian kanan dengan dua Completed tasks
                       // Expanded(

@@ -17,16 +17,30 @@ class BottomNavBar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
         child: SizedBox(
-          height: 70,
+          height: 80,
           child: BottomNavigationBar(
             backgroundColor: Color(0xFF1483C2),
             currentIndex: currentIndex,
             onTap: onTap,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
             selectedItemColor: Colors.blue,
             unselectedItemColor: Color(0xFFFAFAFA),
-            items: const[
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: currentIndex == 0 ? Color(0xFFFAFAFA) : Colors.transparent
+                  ),
+                  padding: EdgeInsets.all(7),
+                  child: Image.asset(
+                  'assets/icons/home.png',
+                  width: 30,
+                  height: 30,
+                  color: currentIndex == 0 ? Color(0xFF1483C2) : Colors.white70,
+                ),
+                ),
                 label: 'Home'
               ),
               BottomNavigationBarItem(
@@ -39,7 +53,6 @@ class BottomNavBar extends StatelessWidget {
               ),
             ]
           ),
-
         )
       )
     );
