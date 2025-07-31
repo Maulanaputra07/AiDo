@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:aido/components/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
@@ -41,7 +42,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-  final dateParts = getFormattedDate();
+  // final dateParts = getFormattedDate();
     
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +57,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               widget.title,
               style: TextStyle(
                 fontFamily: 'Inknut',
-                color: Colors.blueAccent,
+                color: Color(0xFF1483C2),
                 fontSize: 50,
                 height: 1.2,
                 letterSpacing: -2.5,
@@ -66,10 +67,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           ),
         )
       ),
-      body: Stack(
-        children: [
+      body: SingleChildScrollView(
           // === Main Scroll Content === 
-          SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,18 +79,18 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     width: double.infinity,
                     child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        navButton("home", Icons.home),
-                        navButton("Tasks", Icons.list_alt),
-                        navButton("Completed", Icons.check),
-                        navButton("Smart Tips", Icons.lightbulb),
-                        navButton("Stats", Icons.bar_chart),
-                        navButton("Reminders", Icons.notifications),
-                        navButton("Settings", Icons.settings),
-                      ],
-                    ),
+                    // child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     navButton("home", Icons.home),
+                    //     navButton("Tasks", Icons.list_alt),
+                    //     navButton("Completed", Icons.check),
+                    //     navButton("Smart Tips", Icons.lightbulb),
+                    //     navButton("Stats", Icons.bar_chart),
+                    //     navButton("Reminders", Icons.notifications),
+                    //     navButton("Settings", Icons.settings),
+                    //   ],
+                    // ),
                   ),
                 ),
 
@@ -101,32 +100,44 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 100,
+                          height: 110,
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.orange,
+                            color: Color(0xFF60B5FF),
                             borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFF333333),
+                                spreadRadius: 2,
+                                offset: Offset(4, 4)
+                              )
+                            ],
                             // border: Border.all(color: Colors.black),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Total tasks",
+                                "Total task",
                                 style: TextStyle(
-                                  fontSize: 16, 
-                                  fontWeight: FontWeight.bold
+                                  fontFamily: "Instrument",
+                                  fontSize: 22, 
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFF333333)
                                 ),
                               ),
                               SizedBox(height: 8),
-                              Consumer(builder: (context, ref, _) {
+                              Align(
+                                alignment: Alignment.center,
+                                child:  Consumer(builder: (context, ref, _) {
                                 final taskStream= ref.watch(taskStreamProvider(false));
 
                                 return taskStream.when(
                                   data: (tasks) => Text("${tasks.length}",
                                   style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold
+                                    fontSize: 27,
+                                    fontWeight: FontWeight.bold,
+                                    color:  Color(0xFFFAFAFA)
                                     ),
                                   ),
                                   loading: () => const Text(
@@ -139,13 +150,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   }
                                 );
                               }),
-                              // Text(
-                              //   "0",
-                              //   style: TextStyle(
-                              //     fontSize: 24,
-                              //     fontWeight: FontWeight.bold
-                              //   ),
-                              // )
+                              ),
                             ],
                           ),
                         ),
@@ -153,31 +158,43 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       SizedBox(width: 16),
                       Expanded(
                         child: Container(
-                          height: 100,
+                          height: 110,
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.lightGreen,
+                            color: Color(0xFF60B5FF),
                             borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFF333333),
+                                spreadRadius: 2,
+                                offset: Offset(4, 4)
+                              )
+                            ]
                             // border: Border.all(color: Colors.black),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Completed tasks",
+                                "Completed",
                                 style: TextStyle(
-                                  fontSize: 16, 
-                                  fontWeight: FontWeight.bold
+                                  fontFamily: "Instrument",
+                                  fontSize: 22, 
+                                  fontWeight: FontWeight.w900
                                 ),
                               ),
                               SizedBox(height: 8),
-                              Text(
-                                "0",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              )
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "0",
+                                  style: TextStyle(
+                                    color: Color(0xFFFAFAFA),
+                                    fontSize: 27,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ),
                             ],
                           ),
                         ),
@@ -190,144 +207,159 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Bagian kiri dengan Plan for the day
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: 200,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(17),
-                              topRight: Radius.circular(17),
-                              bottomRight: Radius.circular(17),
-                            ),
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Consumer(
-                            builder:(context, ref, _) {
-                              final taskStream = ref.watch(taskStreamProvider(true));
-
-                              return taskStream.when(
-                                data: (tasks){
-                                  if(tasks.isEmpty) {
-                                    return Center(
-                                      child: Text(
-                                        "Tidak ada task hari ini",
-                                        style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold
-                                        ),
-                                        ),
-                                    );
-                                    // const Text(
-                                    //   "Tidak ada task untuk hari ini",
-                                    //   style: TextStyle(
-                                    //     fontSize: 30
-                                    //   ),
-                                    // );
-                                  }
-
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Task untuk hari ini",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Expanded(
-                                        child: ListView.builder(
-                                          itemCount: tasks.length,
-                                          itemBuilder: (context, index){
-                                            final task = tasks[index];
-                                            return Row(
-                                              children: [
-                                                Icon(
-                                                  task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-                                                  size: 19,
-                                                ),
-                                                const SizedBox(height: 8),
-                                                Text(
-                                                  task.title,
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                  ),
-                                                )
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                }, 
-                                loading: () => const CircularProgressIndicator(),
-                                error: (e, _) => Text('error : $e'), 
-                                );
-                            },
-                          ),
+                      Text("Today", 
+                        style: TextStyle(
+                          fontFamily: "Instrument",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
                         ),
                       ),
+
+                      SizedBox(height: 16),
+
+                      Container(
+                          height: 120,
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(17),
+                            border: Border.all(color: Colors.black)
+                          ),
+                        ),
+                      // Bagian kiri dengan Plan for the day
+                    
+
+                      // Expanded(
+                      //   flex: 2,
+                      //   child: Container(
+                      //     height: 200,
+                      //     padding: EdgeInsets.all(16),
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       borderRadius: BorderRadius.only(
+                      //         bottomLeft: Radius.circular(17),
+                      //         topRight: Radius.circular(17),
+                      //         bottomRight: Radius.circular(17),
+                      //       ),
+                      //       border: Border.all(color: Colors.grey),
+                      //     ),
+                      //     child: Consumer(
+                      //       builder:(context, ref, _) {
+                      //         final taskStream = ref.watch(taskStreamProvider(true));
+
+                      //         return taskStream.when(
+                      //           data: (tasks){
+                      //             if(tasks.isEmpty) {
+                      //               return Center(
+                      //                 child: Text(
+                      //                   "Tidak ada task hari ini",
+                      //                   style: TextStyle(
+                      //                     fontSize: 30,
+                      //                     fontWeight: FontWeight.bold
+                      //                   ),
+                      //                   ),
+                      //               );
+                      //             }
+
+                      //             return Column(
+                      //               crossAxisAlignment: CrossAxisAlignment.start,
+                      //               children: [
+                      //                 const Text(
+                      //                   "Task untuk hari ini",
+                      //                   style: TextStyle(
+                      //                     fontSize: 24,
+                      //                     fontWeight: FontWeight.bold
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(height: 10),
+                      //                 Expanded(
+                      //                   child: ListView.builder(
+                      //                     itemCount: tasks.length,
+                      //                     itemBuilder: (context, index){
+                      //                       final task = tasks[index];
+                      //                       return Row(
+                      //                         children: [
+                      //                           Icon(
+                      //                             task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+                      //                             size: 19,
+                      //                           ),
+                      //                           const SizedBox(height: 8),
+                      //                           Text(
+                      //                             task.title,
+                      //                             style: TextStyle(
+                      //                               fontSize: 24,
+                      //                             ),
+                      //                           )
+                      //                         ],
+                      //                       );
+                      //                     },
+                      //                   ),
+                      //                 )
+                      //               ],
+                      //             );
+                      //           }, 
+                      //           loading: () => const CircularProgressIndicator(),
+                      //           error: (e, _) => Text('error : $e'), 
+                      //           );
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(width: 16),
 
                       // Bagian kanan dengan dua Completed tasks
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            Container(
-                              // container ini akan saya gunakan untuk tanggal hari ini
-                              height: 100,
-                              width: 500,
-                              padding: EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.black),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${dateParts['dayName']}",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                      "${dateParts['date']}",
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                ],
-                              ),
-                            ),
+                      // Expanded(
+                      //   flex: 1,
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //         // container ini akan saya gunakan untuk tanggal hari ini
+                      //         height: 100,
+                      //         width: 500,
+                      //         padding: EdgeInsets.all(16),
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.circular(12),
+                      //           border: Border.all(color: Colors.black),
+                      //         ),
+                      //         child: Column(
+                      //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //           children: [
+                      //             Text(
+                      //               "${dateParts['dayName']}",
+                      //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //             ),
+                      //             SizedBox(height: 5),
+                      //             Text(
+                      //                 "${dateParts['date']}",
+                      //                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      //               ),
+                      //           ],
+                      //         ),
+                      //       ),
 
-                            SizedBox(height: 16),
+                      //       SizedBox(height: 16),
 
-                            Container(
-                              // container ini akan saya gunakan untuk jam saat ini
-                              height: 80,
-                              width: 500,
-                              padding: EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: Center(
-                                child: RealTimeClock(),
-                              )
-                            ),
-                          ],
-                        ),
-                      ),
+                      //       Container(
+                      //         // container ini akan saya gunakan untuk jam saat ini
+                      //         height: 80,
+                      //         width: 500,
+                      //         padding: EdgeInsets.all(16),
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.circular(12),
+                      //           border: Border.all(color: Colors.grey),
+                      //         ),
+                      //         child: Center(
+                      //           child: RealTimeClock(),
+                      //         )
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -338,35 +370,74 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           
           // SizedBox(height: 16),
           
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  heroTag: 'add',
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/addtask');
-                  },
-                  backgroundColor: Colors.white,
-                  shape: CircleBorder(),
-                  child: Icon(Icons.add, color: Colors.black),
-                ),
-                SizedBox(width: 18),
-                FloatingActionButton(
-                  heroTag: 'mic',
-                  onPressed: () {},
-                  backgroundColor: Colors.white,
-                  shape: CircleBorder(),
-                  child: Icon(Icons.mic, color: Colors.black),
-                )
-              ],
+          // Positioned(
+          //   bottom: 80,
+          //   left: 0,
+          //   right: 0,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       FloatingActionButton(
+          //         heroTag: 'add',
+          //         onPressed: () {
+          //           Navigator.pushNamed(context, '/addtask');
+          //         },
+          //         backgroundColor: Colors.white,
+          //         shape: CircleBorder(),
+          //         child: Icon(Icons.add, color: Colors.black),
+          //       ),
+          //       SizedBox(width: 18),
+          //       FloatingActionButton(
+          //         heroTag: 'mic',
+          //         onPressed: () {},
+          //         backgroundColor: Colors.white,
+          //         shape: CircleBorder(),
+          //         child: Icon(Icons.mic, color: Colors.black),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          bottomNavigationBar: SafeArea(
+            child: BottomNavBar(
+              currentIndex: 0,
+              onTap: (index){
+                print("Tapped $index");
+              },
             ),
-          )
-        ],
-      )// This trailing comma makes auto-formatting nicer for build methods.
+          ),
+
+          
+
+          floatingActionButton: SizedBox(
+            width: 72,
+            height: 72,
+            child:
+              FloatingActionButton(
+                heroTag: 'add',
+                onPressed: () {
+                  Navigator.pushNamed(context, '/addtask');
+                },
+                backgroundColor: Color(0xFF1483C2),
+                shape: CircleBorder(),
+                child: Icon(Icons.add, color: Color(0xFFFAFAFA)),
+              ),
+                // FloatingActionButton(
+                //   heroTag: 'mic',
+                //   onPressed: () {},
+                //   backgroundColor: Colors.white,
+                //   shape: CircleBorder(),
+                //   child: Icon(Icons.mic, color: Colors.black),
+                // )
+          ),
+
+          // BottomNavigationBar: SafeArea(
+          //     child: BottomNavBar(
+          //     currentIndex: 0,
+          //     onTap: (index){
+          //       print("Tapped index: $index");
+          //       },
+          //     ),
+          //   )/ This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -377,16 +448,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       (){
 
       }, 
-      icon: Icon(icon, color: Colors.black),
+      icon: Icon(icon, color: Color(0xFF60B5FF)),
       label: Text(
         label, 
         style: TextStyle(
-          color: Colors.black
+          color: Color(0xFF60B5FF)
         ),
       ),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(color: Colors.black),
-        backgroundColor: Colors.white,
+        side: BorderSide(color: Color(0xFF60B5FF)),
+        backgroundColor: Color(0xFFEAF6FF),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0)
         ),
