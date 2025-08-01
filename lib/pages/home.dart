@@ -286,122 +286,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               );
                             },
                           )
-                      // Bagian kiri dengan Plan for the day
-                    
-
-                      // Expanded(
-                      //   flex: 2,
-                      //   child: Container(
-                      //     height: 200,
-                      //     padding: EdgeInsets.all(16),
-                      //     decoration: BoxDecoration(
-                      //       color: Colors.white,
-                      //       borderRadius: BorderRadius.only(
-                      //         bottomLeft: Radius.circular(17),
-                      //         topRight: Radius.circular(17),
-                      //         bottomRight: Radius.circular(17),
-                      //       ),
-                      //       border: Border.all(color: Colors.grey),
-                      //     ),
-                      //     child: Consumer(
-                      //       builder:(context, ref, _) {
-                      //         final taskStream = ref.watch(taskStreamProvider(true));
-
-                      //         return taskStream.when(
-                      //           data: (tasks){
-                      //             if(tasks.isEmpty) {
-                      //               return Center(
-                      //                 child: Text(
-                      //                   "Tidak ada task hari ini",
-                      //                   style: TextStyle(
-                      //                     fontSize: 30,
-                      //                     fontWeight: FontWeight.bold
-                      //                   ),
-                      //                   ),
-                      //               );
-                      //             }
-
-                      //             return Column(
-                      //               crossAxisAlignment: CrossAxisAlignment.start,
-                      //               children: [
-                      //                 const Text(
-                      //                   "Task untuk hari ini",
-                      //                   style: TextStyle(
-                      //                     fontSize: 24,
-                      //                     fontWeight: FontWeight.bold
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 10),
-                      //                 Expanded(
-                      //                   child: ListView.builder(
-                      //                     itemCount: tasks.length,
-                      //                     itemBuilder: (context, index){
-                      //                       final task = tasks[index];
-                      //                       return Row(
-                      //                         children: [
-                      //                           Icon(
-                      //                             task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-                      //                             size: 19,
-                      //                           ),
-                      //                           const SizedBox(height: 8),
-                      //                           Text(
-                      //                             task.title,
-                      //                             style: TextStyle(
-                      //                               fontSize: 24,
-                      //                             ),
-                      //                           )
-                      //                         ],
-                      //                       );
-                      //                     },
-                      //                   ),
-                      //                 )
-                      //               ],
-                      //             );
-                      //           }, 
-                      //           loading: () => const CircularProgressIndicator(),
-                      //           error: (e, _) => Text('error : $e'), 
-                      //           );
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // SizedBox(width: 16),
-
-                      // Bagian kanan dengan dua Completed tasks
-                      // Expanded(
-                      //   flex: 1,
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         // container ini akan saya gunakan untuk tanggal hari ini
-                      //         height: 100,
-                      //         width: 500,
-                      //         padding: EdgeInsets.all(16),
-                      //         decoration: BoxDecoration(
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.circular(12),
-                      //           border: Border.all(color: Colors.black),
-                      //         ),
-                      //         child: Column(
-                      //           crossAxisAlignment: CrossAxisAlignment.start,
-                      //           children: [
-                      //             Text(
-                      //               "${dateParts['dayName']}",
-                      //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //             ),
-                      //             SizedBox(height: 5),
-                      //             Text(
-                      //                 "${dateParts['date']}",
-                      //                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      //               ),
-                      //           ],
-                      //         ),
-                      //       ),
-
-                      //       SizedBox(height: 16),
-
-                      //       Container(
                       //         // container ini akan saya gunakan untuk jam saat ini
                       //         height: 80,
                       //         width: 500,
@@ -425,36 +309,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ],
             ),
           ),
-          
-          // SizedBox(height: 16),
-          
-          // Positioned(
-          //   bottom: 80,
-          //   left: 0,
-          //   right: 0,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       FloatingActionButton(
-          //         heroTag: 'add',
-          //         onPressed: () {
-          //           Navigator.pushNamed(context, '/addtask');
-          //         },
-          //         backgroundColor: Colors.white,
-          //         shape: CircleBorder(),
-          //         child: Icon(Icons.add, color: Colors.black),
-          //       ),
-          //       SizedBox(width: 18),
-          //       FloatingActionButton(
-          //         heroTag: 'mic',
-          //         onPressed: () {},
-          //         backgroundColor: Colors.white,
-          //         shape: CircleBorder(),
-          //         child: Icon(Icons.mic, color: Colors.black),
-          //       )
-          //     ],
-          //   ),
-          // ),
           bottomNavigationBar: SafeArea(
             child: BottomNavBar(
               currentIndex: 0,
@@ -463,8 +317,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               },
             ),
           ),
-
-          
 
           floatingActionButton: SizedBox(
             width: 72,
@@ -479,23 +331,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 shape: CircleBorder(),
                 child: Icon(Icons.add, color: Color(0xFFFAFAFA)),
               ),
-                // FloatingActionButton(
-                //   heroTag: 'mic',
-                //   onPressed: () {},
-                //   backgroundColor: Colors.white,
-                //   shape: CircleBorder(),
-                //   child: Icon(Icons.mic, color: Colors.black),
-                // )
           ),
-
-          // BottomNavigationBar: SafeArea(
-          //     child: BottomNavBar(
-          //     currentIndex: 0,
-          //     onTap: (index){
-          //       print("Tapped index: $index");
-          //       },
-          //     ),
-          //   )/ This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:aido/providers/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class AddTaskPage extends ConsumerStatefulWidget{
   const AddTaskPage({super.key});
@@ -59,23 +60,51 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           await taskRepo.addTask(newTask);
           
           if(!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task berhasil disimpan'))
-          );
-          Navigator.pop(context);
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.success,
+            animType: AnimType.scale,
+            title: "Success",
+            desc: "Berhasil menambahkan task",
+            btnOkOnPress: () {
+              Navigator.pop(context);
+            },
+            btnOkText: "Oke",
+            btnOkColor: Color(0xFF1483C2)
+        ).show();
+          // ScaffoldMessenger.of(context).showSnackBar(
+          // const SnackBar(content: Text('Task berhasil disimpan'))
+          // );
         }catch(e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Gagal menambahkan task: $e"))
-          );
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.error,
+            animType: AnimType.bottomSlide,
+            title: "Error",
+            desc: "Gagal menambahkan task: $e",
+            btnOkOnPress: () {},
+            btnOkText: "Oke",
+            btnOkColor: Color(0xFF1483C2)
+        ).show();
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text("Gagal menambahkan task: $e"))
+          // );
         }finally {
           setState(() {
             _isLoading = false;
           });
         }
       }else{
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Isi task tidak bisa kosong')),
-        );
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.bottomSlide,
+          title: "Error",
+          desc: "Harap isi task terlebih dahulu",
+          btnOkOnPress: () {},
+          btnOkText: "Oke",
+          btnOkColor: Color(0xFF1483C2)
+        ).show();
       }
   }
 
@@ -84,10 +113,16 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-        "AiDo - Add Task",
-        style: TextStyle(color: Colors.white),
+        "Add Task",
+        style: TextStyle(
+          fontFamily: "Inknut",
+          fontSize: 30,
+          letterSpacing: 0,
+          color: Color(0xFF1483C2),
+          fontWeight: FontWeight.bold
+        ),
       ),
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Color(0xFFFAFAFA),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -96,21 +131,23 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: "Task title",
+                labelText: "Title",
                 labelStyle: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF1483C2),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Instrument",
                   fontSize: 50,
                 ),
                 floatingLabelStyle: TextStyle(
                   fontSize: 25,
-                  color: Colors.white,
+                  color: Color(0xFF1483C2),
                   fontWeight: FontWeight.bold,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide.none
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
+                  borderSide: BorderSide(color: Color(0xFF333333), width: 2),
                   borderRadius: BorderRadius.circular(10)
                 ),
                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14)
@@ -118,7 +155,9 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               ),
               style: TextStyle(
                 fontSize: 50,
-                color: Colors.white,
+                fontFamily: 'Instrument',
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF333333),
               ),
             ),
             const SizedBox(height: 20),
@@ -126,7 +165,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               "Sub Task",
               style: TextStyle(
                 fontSize: 24,
-                color: Colors.white,
+                fontFamily: 'Instrument',
+                color: Color(0xFF1483C2),
                 fontWeight: FontWeight.bold
               ),
               textAlign: TextAlign.start,
@@ -147,7 +187,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                   Expanded(
                     child: TextField(
                       decoration: const InputDecoration(
-                        hintText: "Subtask title",
+                        hintText: "Sub-task 1",
+                        hintStyle: TextStyle(color: Color(0xFFC2C6CE))
                       ),
                       onChanged: (value) => _updateSubtasksTitle(index, value),
                     ),
@@ -158,14 +199,29 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
             Align(
               alignment: Alignment.centerLeft,
-              child: TextButton.icon(onPressed: _addSubTask, icon: const Icon(Icons.add), label: const Text('Tambah Subtask')),
+              child: TextButton.icon(onPressed: _addSubTask, icon: const Icon(Icons.add, color: Color(0xFF1483C2),), label: const Text('Add Sub-task', style: TextStyle(color: Color(0xFF1483C2)))),
             ),
 
             const SizedBox(height: 20),
 
             ElevatedButton(
                 onPressed: _isLoading ? null : _saveTask,
-                child: _isLoading ? const CircularProgressIndicator() : const Text("Add Task"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF1483C2),
+                  foregroundColor: Color(0xFFFAFAFA),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)
+                  )
+                ),
+                child: _isLoading ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF1483C2),
+                    strokeWidth: 2,
+                  ),
+                ) : const Text("Save"),
               )
           ],
         ),
