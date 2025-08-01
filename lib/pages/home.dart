@@ -1,5 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aido/components/bottom_navbar.dart';
+import 'package:aido/pages/detail_task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
@@ -235,7 +236,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                       itemCount: tasks.length,
                                       itemBuilder: (context, index){
                                         final task = tasks[index];
-                                        return Container(
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context, 
+                                              MaterialPageRoute(builder: (_) => TaskDetailPage(task: task)),
+                                              );
+                                          },
+                                          child: Container(
                                           height: 120,
                                           margin: EdgeInsets.only(bottom:12),
                                           padding: EdgeInsets.all(16),
@@ -277,6 +285,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                               ],
                                             )
                                           ),
+                                        ),
                                         );
                                       }
                                     );
