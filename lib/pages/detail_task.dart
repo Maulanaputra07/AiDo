@@ -18,7 +18,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFAFAFA),
+      ),
       body: Column(
       children: [
         Padding(
@@ -57,7 +59,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           });
 
                           await taskRepo.updateSubTasks(widget.task.id, widget.task.subTasks);
+                        },
+                        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                          if(states.contains(WidgetState.selected)) {
+                            return Color(0xFF1483C2);
+                          }
+
+                          return Color(0xFFFAFAFA);
                         }),
+                        checkColor: Color(0xFFFAFAFA),
+                        side: const BorderSide(
+                          color: Color(0xFF1483C2),
+                          width: 1.4
+                        ),
+                        ),
                         title: Text(subtask.title, style: TextStyle(
                           color: const Color(0xFF333333),
                           fontFamily: 'Instrument',
