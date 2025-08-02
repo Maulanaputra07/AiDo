@@ -32,7 +32,7 @@ class Task {
 
 class SubTask {
   final String title;
-  final bool isDone;
+  bool isDone;
 
   SubTask({
     required this.title,

@@ -32,4 +32,10 @@ class TaskRepository {
       'createdAt' : Timestamp.fromDate(task.createdAt),
     });
   }
+
+  Future<void> updateSubTasks(String taskId, List<SubTask> subTasks) async {
+    await _db.collection('tasks').doc(taskId).update({
+      'subTasks': subTasks.map((s) => s.toMap()).toList()
+    });
+  }
 }
