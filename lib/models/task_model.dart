@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Task {
   final String id;
   final String title;
+  final String desc;
   final List<SubTask> subTasks;
   final bool isDone;
   final DateTime createdAt;
@@ -10,6 +11,7 @@ class Task {
   Task({
     required this.id,
     required this.title,
+    required this.desc,
     this.subTasks = const [],
     required this.isDone,
     required this.createdAt,
@@ -20,6 +22,7 @@ class Task {
     return Task(
       id: doc.id,
       title: data['title'] ?? '',
+      desc: data['desc'] ?? '',
       subTasks: (data['subTasks'] as List<dynamic>? ?? [])
         .map((e) => SubTask.fromMap(e as Map<String, dynamic>))
         .toList(),

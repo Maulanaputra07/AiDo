@@ -19,21 +19,39 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
-        backgroundColor: Color(0xFFFAFAFA),
+        backgroundColor: Color(0xFFFAFAFA), 
       ),
       body: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(17),
-          child: Text(
-            widget.task.title,
-            style: TextStyle(
-              fontSize: 40,
-              color: const Color(0xFF1483C2),
-              fontFamily: 'Instrument',
-              fontWeight: FontWeight.bold
-            ),
-          ), 
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.task.title,
+                style: TextStyle(
+                  fontSize: 40,
+                  color: const Color(0xFF1483C2),
+                  fontFamily: 'Instrument',
+                  fontWeight: FontWeight.w900
+                ),
+              ), 
+              SizedBox(height: 10,),
+              Text(
+                widget.task.desc,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: const Color(0xFF1483C2),
+                  fontFamily: 'Instrument',
+                  fontWeight: FontWeight.normal
+                ),
+              ), 
+            ],
+          )
+
         ),
 
         Expanded(

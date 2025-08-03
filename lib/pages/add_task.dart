@@ -13,6 +13,7 @@ class AddTaskPage extends ConsumerStatefulWidget{
 
 class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   final List<SubTask> _subTasks = [];
   final bool _isDone = false;
   bool _isLoading = false;
@@ -40,8 +41,9 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
   Future<void> _saveTask() async{
       final title = _titleController.text.trim();
+      final desc = _descriptionController.text.trim();
 
-      if(title.isNotEmpty){
+      if(title.isNotEmpty && desc.isNotEmpty){
         setState(() {
           _isLoading = true;
         });
@@ -49,6 +51,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
         final newTask = Task(
           id: '',
           title: title,
+          desc: desc,
           subTasks: _subTasks,
           isDone: _isDone,
           createdAt: DateTime.now(),
@@ -131,6 +134,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFF6F6F6),
                 labelText: "Title",
                 labelStyle: TextStyle(
                   color: Color(0xFF1483C2),
@@ -144,7 +149,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                   fontWeight: FontWeight.bold,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16)
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF333333), width: 2),
@@ -158,6 +164,31 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                 fontFamily: 'Instrument',
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF333333),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _descriptionController,
+              keyboardType: TextInputType.multiline,
+              maxLines: 3,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFF6F6F6),
+                labelText: 'Description',
+                labelStyle: TextStyle(
+                  color: Color(0xFF1483C2),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Instrument",
+                  fontSize: 25,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16)
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF333333), width: 2),
+                  borderRadius: BorderRadius.circular(10)
+                ),
               ),
             ),
             const SizedBox(height: 20),
