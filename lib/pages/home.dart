@@ -261,29 +261,67 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                           ),
                                           child: Align(
                                             alignment: Alignment.topLeft,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  task.title,
-                                                  style: TextStyle(
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color(0xFF1483C2)
-                                                  ),
+                                            child: Row(
+                                                  children: [
+                                                      Container(
+                                                        padding: EdgeInsets.all(8),
+                                                        decoration: BoxDecoration(
+                                                          color: Color(0xFFFAFAFA),
+                                                          borderRadius: BorderRadius.circular(9),
+                                                          border: Border.all(
+                                                            color: Color(0xFF333333),
+                                                            width: 2,
+                                                          )
+                                                        ),
+                                                        child: Image.asset(
+                                                        'assets/icons/success.png',
+                                                        width: 25,
+                                                        height: 25,
+                                                        color: Color(0xFF333333),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 8,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          task.title,
+                                                          style: TextStyle(
+                                                            fontSize: 30,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Color(0xFF1483C2)
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 2),
+                                                        Text(
+                                                          "${task.subTasks.length} subtask",
+                                                          style: TextStyle(
+                                                            fontSize: 25,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: Color(0xFF1483C2)
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  "${task.subTasks.length} subtask",
-                                                  style: TextStyle(
-                                                    fontSize: 25,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: Color(0xFF1483C2)
-                                                  ),
-                                                ),
-                                              ],
-                                            )
+                                            // Column(
+                                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                                            //   mainAxisAlignment: MainAxisAlignment.center,
+                                            //   children: [
+                                                
+                                            //     SizedBox(height: 2),
+                                            //     Text(
+                                            //       "${task.subTasks.length} subtask",
+                                            //       style: TextStyle(
+                                            //         fontSize: 25,
+                                            //         fontWeight: FontWeight.normal,
+                                            //         color: Color(0xFF1483C2)
+                                            //       ),
+                                            //     ),
+                                            //   ],
+                                            // )
                                           ),
                                         ),
                                         );
