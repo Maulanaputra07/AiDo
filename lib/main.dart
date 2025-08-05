@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import './navigation/main_navigation.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -28,24 +29,6 @@ class MyApp extends StatefulWidget{
 
   @override
   State<MyApp> createState() => _MyAppState();
-  // @override
-  // void initState(){
-  //   super.inistState();
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     debugShowCheckedModeBanner: false,
-  //     theme: ThemeData(
-  //       scaffoldBackgroundColor: Color(0xFFFAFAFA)
-  //     ),
-  //     home: const HomePage(),
-  //     routes: {
-  //       '/addtask': (context) => const AddTaskPage(),
-  //     },
-  //   );
-  // }
 }
 
 
@@ -70,7 +53,7 @@ class _MyAppState extends State<MyApp>{
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFFAFAFA)
       ),
-      home: const HomePage(),
+      home: MainNavigation(),
       routes: {
         '/addtask': (context) => const AddTaskPage(),
       },

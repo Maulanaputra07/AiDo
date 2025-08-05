@@ -1,5 +1,7 @@
+import 'package:aido/pages/detail_task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/task_provider.dart';
 
 class ListTaskPage extends ConsumerWidget {
   const ListTaskPage({super.key});
@@ -22,10 +24,132 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 100),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("INI PAGE LIST TAKS"),
+            Text(
+              "List Task",
+              style: TextStyle(
+                fontSize: 50,
+                fontFamily: 'Instrument',
+                color: Color(0xFF1483C2)
+              ),
+            ),
             SizedBox(height: 20,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final taskStream = ref.watch(taskStreamProvider(false));
+
+                      return taskStream.when(
+                        data: (tasks){
+                          if(tasks.isEmpty){
+                            return Center(
+                              child: Text(
+                                "Anda belum memilik task untuk hari ini",
+                                style: TextStyle(
+                                  fontFamily: "Instrument",
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: tasks.length,
+                            itemBuilder: (context, index){
+                              final task = tasks[index];
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (_) => TaskDetailPage(task: task)),
+                                    );
+                                },
+                                child: Container(
+                                height: 120,
+                                margin: EdgeInsets.only(bottom:12),
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(17),
+                                  border: Border.all(color: Colors.black),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFFC2C6CE),
+                                      spreadRadius: 2,
+                                      offset: Offset(2, 2)
+                                    )
+                                  ],
+                                  color: Color(0xFFFAFAFA)
+                                ),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Row(
+                                        children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFFAFAFA),
+                                                borderRadius: BorderRadius.circular(9),
+                                                border: Border.all(
+                                                  color: Color(0xFF333333),
+                                                  width: 2,
+                                                )
+                                              ),
+                                              child: Image.asset(
+                                              'assets/icons/success.png',
+                                              width: 25,
+                                              height: 25,
+                                              color: Color(0xFF333333),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                task.title,
+                                                style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1483C2)
+                                                ),
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "${task.subTasks.length} subtask",
+                                                style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Color(0xFF1483C2)
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                ),
+                              ),
+                              );
+                            }
+                          );
+                        }, 
+                        error: (e, _) => Text('error: $e'), 
+                        loading: () => Center(child: Text("Loading.."))
+                      );
+                    }
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

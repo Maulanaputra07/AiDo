@@ -1,5 +1,3 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:aido/components/bottom_navbar.dart';
 import 'package:aido/pages/detail_task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,14 +74,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                    // color: Colors.white,
-                    padding: EdgeInsets.all(16.0),
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -224,7 +214,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                         style: TextStyle(
                                           fontFamily: "Instrument",
                                           fontSize: 27,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     );
@@ -306,22 +296,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                                     ),
                                                   ],
                                                 ),
-                                            // Column(
-                                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                                            //   mainAxisAlignment: MainAxisAlignment.center,
-                                            //   children: [
-                                                
-                                            //     SizedBox(height: 2),
-                                            //     Text(
-                                            //       "${task.subTasks.length} subtask",
-                                            //       style: TextStyle(
-                                            //         fontSize: 25,
-                                            //         fontWeight: FontWeight.normal,
-                                            //         color: Color(0xFF1483C2)
-                                            //       ),
-                                            //     ),
-                                            //   ],
-                                            // )
                                           ),
                                         ),
                                         );
@@ -354,14 +328,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 ),
 
               ],
-            ),
-          ),
-          bottomNavigationBar: SafeArea(
-            child: BottomNavBar(
-              currentIndex: 0,
-              onTap: (index){
-                print("Tapped $index");
-              },
             ),
           ),
 
