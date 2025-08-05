@@ -35,8 +35,11 @@ class TaskRepository {
   }
 
   Future<void> updateSubTasks(String taskId, List<SubTask> subTasks) async {
+    final allDone = subTasks.every((s) => s.isDone);
+    
     await _db.collection('tasks').doc(taskId).update({
-      'subTasks': subTasks.map((s) => s.toMap()).toList()
+      'subTasks': subTasks.map((s) => s.toMap()).toList(),
+      'isDone' : allDone
     });
   }
 }

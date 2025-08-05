@@ -44,7 +44,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 20,
-                  color: const Color(0xFF1483C2),
+                  color: const Color(0xFF333333),
                   fontFamily: 'Instrument',
                   fontWeight: FontWeight.normal
                 ),

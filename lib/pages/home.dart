@@ -247,24 +247,40 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                                 offset: Offset(2, 2)
                                               )
                                             ],
-                                            color: Color(0xFFFAFAFA)
+                                            // color: task.isDone ? Color(0xFF78C841).withValues(alpha: 64) : Color(0xFFEEEEEE),
+                                            color: task.isDone ? Color(0xFF93DA97) : Color(0xFFEEEEEE),
                                           ),
                                           child: Align(
                                             alignment: Alignment.topLeft,
-                                            child: Row(
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  bottom: 0,
+                                                  right: 0,
+                                                  child: Text(
+                                                    '${(task.progres * 100).toStringAsFixed(0)}%',
+                                                    style: TextStyle(
+                                                      fontSize: 80,
+                                                      fontFamily: 'Instrument',
+                                                      fontWeight: FontWeight.w900,
+                                                      color: Color(0x80333333),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Row(
                                                   children: [
                                                       Container(
                                                         padding: EdgeInsets.all(8),
                                                         decoration: BoxDecoration(
-                                                          color: Color(0xFFFAFAFA),
+                                                          color: task.isDone ? Color(0xFF78C841) : Color(0xFFEEEEEE),
                                                           borderRadius: BorderRadius.circular(9),
                                                           border: Border.all(
-                                                            color: Color(0xFF333333),
-                                                            width: 2,
+                                                            color: task.isDone ? Color(0xFF78C841) : Color(0xFF333333),
+                                                            width: 1.5,
                                                           )
                                                         ),
                                                         child: Image.asset(
-                                                        'assets/icons/success.png',
+                                                        task.isDone ? 'assets/icons/success.png' : 'assets/icons/progress.png',
                                                         width: 25,
                                                         height: 25,
                                                         color: Color(0xFF333333),
@@ -280,7 +296,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                                           style: TextStyle(
                                                             fontSize: 30,
                                                             fontWeight: FontWeight.bold,
-                                                            color: Color(0xFF1483C2)
+                                                            color: Color(0xFF333333)
                                                           ),
                                                         ),
                                                         SizedBox(height: 2),
@@ -289,13 +305,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                                           style: TextStyle(
                                                             fontSize: 25,
                                                             fontWeight: FontWeight.normal,
-                                                            color: Color(0xFF1483C2)
+                                                            color: Color(0xFF333333)
                                                           ),
                                                         ),
                                                       ],
                                                     ),
                                                   ],
                                                 ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         );

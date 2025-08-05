@@ -17,6 +17,12 @@ class Task {
     required this.createdAt,
   });
 
+  double get progres {
+    if (subTasks.isEmpty) return 0.0;
+    final doneCount = subTasks.where((s) => s.isDone).length;
+    return doneCount / subTasks.length;
+  }
+
   factory Task.fromDoc(DocumentSnapshot doc){
     final data = doc.data() as Map<String, dynamic>;
     return Task(
