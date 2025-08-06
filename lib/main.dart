@@ -1,6 +1,9 @@
 import 'package:aido/firebase_options.dart';
 import 'package:aido/pages/add_task.dart';
+import 'package:aido/pages/auth/login_page.dart';
+import 'package:aido/pages/auth/register_page.dart';
 import 'package:aido/pages/home.dart';
+import 'package:aido/pages/welcome/welcome_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,9 +43,9 @@ class _MyAppState extends State<MyApp>{
   }
 
   void initialization() async {
-    print("Pausing...");
+    // print("Pausing...");
     await Future.delayed(const Duration(seconds: 3));
-    print("Unpausing");
+    // print("Unpausing");
     FlutterNativeSplash.remove();
   }
 
@@ -53,9 +56,13 @@ class _MyAppState extends State<MyApp>{
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFFAFAFA)
       ),
-      home: MainNavigation(),
+      home: const WelcomePage(),
       routes: {
+        '/main' : (context) => const MainNavigation(),
         '/addtask': (context) => const AddTaskPage(),
+        '/welcome': (context) => const WelcomePage(),
+        '/login' : (context) => const LoginPage(),
+        '/register' : (context) => const RegisterPage(),
       },
     );
   }
