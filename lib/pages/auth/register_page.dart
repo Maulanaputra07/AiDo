@@ -56,6 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 )
               ),
             ),
+            
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
