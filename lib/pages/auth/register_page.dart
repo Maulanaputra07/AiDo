@@ -1,4 +1,6 @@
+import 'package:aido/repositories/auth_repositori.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class RegisterPage extends StatefulWidget{
   const RegisterPage({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final authRepo = AuthRepository();
   
   @override
   Widget build(BuildContext context) {
@@ -56,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 )
               ),
             ),
-            
+
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -199,7 +202,29 @@ class _RegisterPageState extends State<RegisterPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {}, 
+                        onPressed: () async {
+                          try{
+                            final user = await authRepo.register(
+                              email: _emailController.text.trim(), 
+                              username: _usernameController.text.trim(), 
+                              password: _passwordController.text.trim()
+                            );
+                            if(user != null) {
+                              Navigator.pushReplacementNamed(context, '/main');
+                            }
+                          }catch(e) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.bottomSlide,
+                              title: "Error",
+                              desc: e.toString(),
+                              btnOkOnPress: () {},
+                              btnOkText: "Oke",
+                              btnOkColor: Color(0xFF1483C2)
+                            ).show();
+                          }
+                        }, 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF1483C2)
                         ),

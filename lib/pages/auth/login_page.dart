@@ -1,4 +1,6 @@
+import 'package:aido/repositories/auth_repositori.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class LoginPage extends StatefulWidget{
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class _LoginPageState extends State<LoginPage>{
   bool isObscured = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final authRepository = AuthRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +152,29 @@ class _LoginPageState extends State<LoginPage>{
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try{
+                              final user = await authRepository.login(
+                                email: _emailController.text.trim(), 
+                                password: _passwordController.text.trim()
+                              );
+
+                              if(user != null){
+                                Navigator.pushReplacementNamed(context, '/main');
+                              }
+                            }catch (e) {
+                                AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.bottomSlide,
+                                title: "Error",
+                                desc: e.toString(),
+                                btnOkOnPress: () {},
+                                btnOkText: "Oke",
+                                btnOkColor: Color(0xFF1483C2)
+                              ).show();
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF1483C2)
                           ),
