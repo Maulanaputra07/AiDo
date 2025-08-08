@@ -29,6 +29,7 @@ class TaskRepository {
       'title' : task.title,
       'desc' : task.desc,
       'isDone' : task.isDone,
+      'deadline' : task.deadline != null ? Timestamp.fromDate(task.deadline!) : null,
       'subTasks' : task.subTasks.map((sub) => sub.toMap()).toList(),
       'createdAt' : Timestamp.fromDate(task.createdAt),
     });

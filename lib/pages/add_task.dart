@@ -1,5 +1,7 @@
 import 'package:aido/providers/task_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -17,6 +19,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   final List<SubTask> _subTasks = [];
   final bool _isDone = false;
   bool _isLoading = false;
+  DateTime? selectedDeadline;
 
   void _addSubTask() {
     setState(() {
@@ -54,6 +57,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           desc: desc,
           subTasks: _subTasks,
           isDone: _isDone,
+          deadline: selectedDeadline,
           createdAt: DateTime.now(),
         );
 
@@ -109,6 +113,36 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           btnOkColor: Color(0xFF1483C2)
         ).show();
       }
+  }
+
+  Future<void> pickDeadlinewithTime(BuildContext context) async {
+    final DateTime? date = await showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(), 
+      lastDate: DateTime(2100)
+    );
+
+    if (date != null){
+      final TimeOfDay? time = await showTimePicker(
+        context: context, 
+        initialTime: TimeOfDay.now()
+      );
+      
+      if (time != null) {
+        final combined = DateTime(
+          date.year,
+          date.month, 
+          date.day, 
+          time.hour, 
+          time.minute
+        );
+
+        setState(() {
+          selectedDeadline = combined;
+        });
+      }
+    }
   }
 
 @override
@@ -208,7 +242,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               final index = entry.key;
               final subTask = entry.value;
 
-
               return Row(
                 children: [
                   Checkbox(
@@ -234,6 +267,28 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             ),
 
             const SizedBox(height: 20),
+
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => pickDeadlinewithTime(context), 
+                    child: const Text("pilih deadline!")
+                  ),
+                  if(selectedDeadline != null)
+                    Text(
+                      'Deadline : ${DateFormat('dd MMM yyyy, HH:mm').format(selectedDeadline!)}',
+                      style: const TextStyle(
+                        fontSize: 15
+                      ),
+                    )
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
 
             ElevatedButton(
                 onPressed: _isLoading ? null : _saveTask,

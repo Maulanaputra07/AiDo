@@ -45,6 +45,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xFFFAFAFA),
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -248,7 +249,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                               )
                                             ],
                                             // color: task.isDone ? Color(0xFF78C841).withValues(alpha: 64) : Color(0xFFEEEEEE),
-                                            color: task.isDone ? Color(0xFF93DA97) : Color(0xFFEEEEEE),
+                                            color: task.isFailed ? Color(0x80E43636) : (task.isDone ? Color(0xFF93DA97) : Color(0xFFEEEEEE)),
                                           ),
                                           child: Align(
                                             alignment: Alignment.topLeft,
@@ -272,15 +273,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                                       Container(
                                                         padding: EdgeInsets.all(8),
                                                         decoration: BoxDecoration(
-                                                          color: task.isDone ? Color(0xFF78C841) : Color(0xFFEEEEEE),
+                                                          color: task.isFailed ? Color(0xFFE43636) : (task.isDone ? Color(0xFF78C841) : Color(0xFFEEEEEE)),
                                                           borderRadius: BorderRadius.circular(9),
                                                           border: Border.all(
-                                                            color: task.isDone ? Color(0xFF78C841) : Color(0xFF333333),
+                                                            color: task.isFailed ? Color(0xFFE43636) : (task.isDone ? Color(0xFF78C841) : Color(0xFF333333)),
                                                             width: 1.5,
                                                           )
                                                         ),
                                                         child: Image.asset(
-                                                        task.isDone ? 'assets/icons/success.png' : 'assets/icons/progress.png',
+                                                        task.isFailed ? 'assets/icons/failed.png' : (task.isDone ? 'assets/icons/success.png' : 'assets/icons/progress.png'),
                                                         width: 25,
                                                         height: 25,
                                                         color: Color(0xFF333333),
