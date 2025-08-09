@@ -10,6 +10,7 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPageState extends State<LoginPage>{
+  bool _isLoading = false;
   bool isObscured = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -152,33 +153,20 @@ class _LoginPageState extends State<LoginPage>{
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            try{
-                              final user = await authRepository.login(
-                                email: _emailController.text.trim(), 
-                                password: _passwordController.text.trim()
-                              );
-
-                              if(user != null){
-                                Navigator.pushReplacementNamed(context, '/main');
-                              }
-                            }catch (e) {
-                                AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.bottomSlide,
-                                title: "Error",
-                                desc: e.toString(),
-                                btnOkOnPress: () {},
-                                btnOkText: "Oke",
-                                btnOkColor: Color(0xFF1483C2)
-                              ).show();
-                            }
-                          },
+                          onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF1483C2)
                           ),
-                          child: const Text(
+                          child: _isLoading ? 
+                          const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ) 
+                          : const Text(
                             "Login",
                             style: TextStyle(
                               fontFamily: 'Instrument',
@@ -225,5 +213,41 @@ class _LoginPageState extends State<LoginPage>{
         ),
       )
     );
+  }
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+    final user = await authRepository.login(
+      email: _emailController.text.trim(), 
+      password: _passwordController.text.trim()
+    );
+
+    if(user != null){
+      // await authRepository.saveLoginData(token)
+      Navigator.pushReplacementNamed(context, '/main');
+    }
+
+    }catch (e) {
+        AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.bottomSlide,
+        title: "Error",
+        desc: e.toString(),
+        btnOkOnPress: () {},
+        btnOkText: "Oke",
+        btnOkColor: Color(0xFF1483C2)
+      ).show();
+    } finally{
+      if(mounted){
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }
