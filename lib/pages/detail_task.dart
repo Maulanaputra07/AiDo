@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:aido/providers/task_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
-
+import 'package:intl/intl.dart';
 
 class TaskDetailPage extends StatefulWidget{
   final Task task;
@@ -16,6 +16,24 @@ class TaskDetailPage extends StatefulWidget{
 class _TaskDetailPageState extends State<TaskDetailPage> {
   @override
   Widget build(BuildContext context) {
+    final timeLeft = widget.task.timeLeft;
+    print("timeleft: ${widget.task.timeLeft}");
+    print("isFailed: ${widget.task.isFailed}");
+
+    String formatTimeLeft(Duration? timeLeft){
+      if(timeLeft == null){
+        return "Tidak ada deadline";
+      } else if(timeLeft.isNegative) {
+        return "Terlambat ${timeLeft.abs().inHours} jam";
+      } else if(timeLeft.inDays > 0) {
+        return "${timeLeft.inDays} hari lagi";
+      } else if(timeLeft.inHours > 0) {
+        return "${timeLeft.inHours} jam lagi";
+      }else {
+        return "${timeLeft.inMinutes} menit lagi";
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
@@ -49,6 +67,49 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   fontWeight: FontWeight.normal
                 ),
               ), 
+              SizedBox(height: 10,),
+              Text(
+                widget.task.deadline != null ?
+                  'Deadline : ${DateFormat('dd MMM yyyy, HH:mm').format(widget.task.deadline!)}' : 'Tidak ada deadline',
+                style: TextStyle(
+                  fontFamily: 'Instrument',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                  color: Color(0xFF1483C2)
+                ),
+              ),
+              SizedBox(height: 10,),
+              SizedBox(
+                child: Container(
+                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    color: widget.task.isFailed ? Color(0x80E43636) : Color(0xFFE3EBFA),
+                    borderRadius: BorderRadius.circular(16)
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/icons/date.png',
+                        width: 35,
+                      ),
+                      SizedBox(width: 2,),
+                      Text(
+                        widget.task.isFailed ? 
+                        "Failed, ${formatTimeLeft(timeLeft)}" :
+                        (widget.task.isDone ? "Done" : formatTimeLeft(timeLeft)),
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: const Color(0xFF333333),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.w600
+                        ),
+                      ),
+                    ],
+                  )
+                ), 
+              ),
             ],
           )
 
@@ -63,7 +124,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 itemCount: widget.task.subTasks.length,
                 itemBuilder: (context, index) {
                   final subtask = widget.task.subTasks[index];
-
                   return Card(
                     child: ListTile(
                       tileColor: const Color(0xFFFAFAFA),

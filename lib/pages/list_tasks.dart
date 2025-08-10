@@ -24,7 +24,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: 100),
+        padding: EdgeInsets.only(bottom: 50, top: 50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -33,6 +33,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
               style: TextStyle(
                 fontSize: 50,
                 fontFamily: 'Instrument',
+                fontWeight: FontWeight.bold,
                 color: Color(0xFF1483C2)
               ),
             ),
@@ -87,7 +88,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                       offset: Offset(2, 2)
                                     )
                                   ],
-                                  color: Color(0xFFFAFAFA)
+                                color: task.isFailed ? Color(0x80E43636) : (task.isDone ? Color(0xFF93DA97) : Color(0xFFEEEEEE)),
                                 ),
                                 child: Align(
                                   alignment: Alignment.topLeft,
@@ -96,7 +97,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                             Container(
                                               padding: EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: Color(0xFFFAFAFA),
+                                                color: task.isFailed ? Color(0xFFE43636) : (task.isDone ? Color(0xFF78C841) : Color(0xFFEEEEEE)),
                                                 borderRadius: BorderRadius.circular(9),
                                                 border: Border.all(
                                                   color: Color(0xFF333333),
@@ -104,7 +105,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                                 )
                                               ),
                                               child: Image.asset(
-                                              'assets/icons/success.png',
+                                                task.isFailed ? 'assets/icons/failed.png' : (task.isDone ? 'assets/icons/success.png' : 'assets/icons/progress.png'),
                                               width: 25,
                                               height: 25,
                                               color: Color(0xFF333333),
@@ -120,7 +121,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                                 style: TextStyle(
                                                   fontSize: 30,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(0xFF1483C2)
+                                                  color: Color(0xFF333333)
                                                 ),
                                               ),
                                               SizedBox(height: 2),
@@ -129,7 +130,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                                 style: TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.normal,
-                                                  color: Color(0xFF1483C2)
+                                                  color: Color(0xFF333333)
                                                 ),
                                               ),
                                             ],

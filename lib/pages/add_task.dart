@@ -1,5 +1,5 @@
 import 'package:aido/providers/task_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,13 +120,43 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
       context: context, 
       initialDate: DateTime.now(),
       firstDate: DateTime.now(), 
-      lastDate: DateTime(2100)
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogTheme: DialogTheme(
+              backgroundColor: Color(0xFFFAFAFA),
+            ),
+            colorScheme: ColorScheme.light(
+              primary: Colors.black54,
+              onPrimary: Colors.black,
+              onSurface: Colors.black
+            )
+          ), 
+          child: child!
+        );
+      }
     );
 
     if (date != null){
       final TimeOfDay? time = await showTimePicker(
         context: context, 
-        initialTime: TimeOfDay.now()
+        initialTime: TimeOfDay.now(),
+        builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogTheme: DialogTheme(
+              backgroundColor: Color(0xFFFAFAFA),
+            ),
+            colorScheme: ColorScheme.light(
+              primary: Colors.black54,
+              onPrimary: Colors.black,
+              onSurface: Colors.black
+            )
+          ), 
+          child: child!
+        );
+      }
       );
       
       if (time != null) {
@@ -273,9 +303,14 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               child: Column(
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF1483C2),
+                      foregroundColor: Color(0xFFFAFAFA),
+                    ),
                     onPressed: () => pickDeadlinewithTime(context), 
                     child: const Text("pilih deadline!")
                   ),
+                  SizedBox(height: 10,),
                   if(selectedDeadline != null)
                     Text(
                       'Deadline : ${DateFormat('dd MMM yyyy, HH:mm').format(selectedDeadline!)}',
