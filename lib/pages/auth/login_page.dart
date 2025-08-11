@@ -1,23 +1,32 @@
+import 'package:aido/providers/auth_provider.dart';
 import 'package:aido/repositories/auth_repositori.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatefulWidget{
+class LoginPage extends ConsumerStatefulWidget{
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{
+class _LoginPageState extends ConsumerState<LoginPage>{
   bool _isLoading = false;
   bool isObscured = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final authRepository = AuthRepository();
+  late final AuthRepository authRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    authRepository = ref.read(authRepositoryProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
+    
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(

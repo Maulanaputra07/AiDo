@@ -1,5 +1,6 @@
 import 'package:aido/pages/home.dart';
 import 'package:aido/pages/list_tasks.dart';
+import 'package:aido/pages/profile.dart';
 import 'package:flutter/material.dart';
 import '../components/bottom_navbar.dart';
 
@@ -16,6 +17,7 @@ class _MainNavigationState extends State<MainNavigation>{
   final List<Widget> pages = const [
     HomePage(),
     ListTaskPage(),
+    ProfilePage()
   ];
 
   @override

@@ -4,8 +4,10 @@ import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  AuthRepository(this._auth, this._firestore);
 
   Future<UserModel?> register({
     required String email,
@@ -26,7 +28,7 @@ class AuthRepository {
         username: username
       );
 
-      await _fireStore.collection('users').doc(uid).set(user.toMap());
+      await _firestore.collection('users').doc(uid).set(user.toMap());
 
       return user;
     } catch (e) {
@@ -46,7 +48,7 @@ class AuthRepository {
         );
 
       final uid = credential.user!.uid;
-      final snapshot = await _fireStore.collection('users').doc(uid).get();
+      final snapshot = await _firestore.collection('users').doc(uid).get();
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('uid', uid);
@@ -64,10 +66,30 @@ class AuthRepository {
     }
   }
 
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
+
   Future<void> saveLoginData(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
     await prefs.setString('token', token);
+  }
+
+  Stream<UserModel> get userStream {
+      final uid = _auth.currentUser!.uid;
+      return _firestore
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((doc) => UserModel.formMap(doc.data()!));
+  }
+
+  Future<void> updateUsername(String newUsername) async {
+    final uid = _auth.currentUser!.uid;
+    await _firestore.collection('users').doc(uid).update({
+      'username' : newUsername
+    });
   }
 
   String _mapFirebaseAuthError(FirebaseAuthException e) {
