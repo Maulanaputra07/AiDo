@@ -13,37 +13,78 @@ class ProfilePage extends ConsumerWidget {
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
         backgroundColor: Color(0xFFFAFAFA), 
+        automaticallyImplyLeading: false,
       ),
       body: userData.when(
         data: (user) => 
         Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Padding(
+            Padding(
               padding: EdgeInsets.all(17),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.center,
+              child: Text(
+                "Profile",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: 'Instrument',
+                  color: Color(0xFF1483C2),
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "Profile",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontFamily: 'Instrument',
-                      color: Color(0xFF1483C2),
-                      fontWeight: FontWeight.bold
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Username: ",
+                          style: TextStyle(
+                          fontSize: 25,
+                          color: Color(0xFF1483C2),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Text(
+                        user.username,
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Color(0xFF1483C2),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.normal
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Username : ${user.username}',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Color(0xFF1483C2),
-                      fontFamily: 'Instrument',
-                      fontWeight: FontWeight.w500
-                    ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Email: ",
+                          style: TextStyle(
+                          fontSize: 25,
+                          color: Color(0xFF1483C2),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Text(
+                        user.email,
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Color(0xFF1483C2),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.normal
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20,),
                   ElevatedButton(
@@ -66,8 +107,8 @@ class ProfilePage extends ConsumerWidget {
                   )
                 ],
               ),
-            )
-            )
+              ),
+            ),
           ],
         ), 
         loading: () => const CircularProgressIndicator(),

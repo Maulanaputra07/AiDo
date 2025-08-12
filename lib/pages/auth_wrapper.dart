@@ -1,3 +1,4 @@
+import 'package:aido/navigation/main_navigation.dart';
 import 'package:aido/pages/home.dart';
 import 'package:aido/pages/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if(snapshot.hasData){
-          return const HomePage();
+          return const MainNavigation();
         }else{
           return const WelcomePage();
         }

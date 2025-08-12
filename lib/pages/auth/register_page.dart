@@ -252,7 +252,43 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       width: double.infinity,
                       height: 50,
                       child: OutlinedButton(
-                        onPressed: () {}, 
+                        onPressed: () async {
+                          try{
+                            final userCredential = await authRepo.signInWithGoogle();
+                            if(userCredential != null){
+                              if(context.mounted){
+                                Navigator.pushReplacementNamed(context, '/main');
+                              }
+                            }else{
+                              print("error sign in");
+                              // AwesomeDialog(
+                              //   context: context,
+                              //   dialogType: DialogType.error,
+                              //   animType: AnimType.bottomSlide,
+                              //   title: "Error",
+                              //   desc: "login dengan google gagal",
+                              //   btnOkOnPress: () {},
+                              //   btnOkText: "Oke",
+                              //   btnOkColor: Color(0xFF1483C2)
+                              // ).show();
+                            }
+                          } catch (e, stackTrace) {
+                            print("Error saat login: $e");
+                            print("StackTrace: $stackTrace");
+                            if (context.mounted) {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.bottomSlide,
+                                title: "Error",
+                                desc: "Login dengan Google gagal.\n\nDetail: $e",
+                                btnOkOnPress: () {},
+                                btnOkText: "Oke",
+                                btnOkColor: const Color(0xFF1483C2),
+                              ).show();
+                            }
+                          }
+                        }, 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent
                         ),

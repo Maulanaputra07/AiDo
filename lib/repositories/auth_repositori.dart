@@ -2,12 +2,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  bool _initialized = false;
 
   AuthRepository(this._auth, this._firestore);
+
+  Future<void> _initialize() async {
+    if(!_initialized){
+      await _googleSignIn.initialize();
+      _initialized = true;
+    }
+  }
 
   Future<UserModel?> register({
     required String email,
@@ -36,6 +46,31 @@ class AuthRepository {
     }
   }
 
+  Future<UserCredential?> signInWithGoogle() async {
+
+    await _initialize();
+    await _googleSignIn.initialize();
+
+    GoogleSignInAccount? googleUser;
+
+    try{
+      await _googleSignIn.attemptLightweightAuthentication();
+      googleUser = await _googleSignIn.authenticate();
+    } catch (e) {
+      print("Google sign-in failed: $e");
+      return null;
+    }
+
+    if (googleUser == null) return null;
+
+    final auth = await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: auth.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   Future<UserModel?> login({
     required String email,
