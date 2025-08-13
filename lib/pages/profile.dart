@@ -15,7 +15,8 @@ class ProfilePage extends ConsumerWidget {
         backgroundColor: Color(0xFFFAFAFA), 
         automaticallyImplyLeading: false,
       ),
-      body: userData.when(
+      body: 
+      userData.when(
         data: (user) => 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +52,7 @@ class ProfilePage extends ConsumerWidget {
                       ),
                       SizedBox(width: 5,),
                       Text(
-                        user.username,
+                        user?.username ?? "Guest",
                         style: TextStyle(
                           fontSize: 25,
                           color: Color(0xFF1483C2),
@@ -75,13 +76,15 @@ class ProfilePage extends ConsumerWidget {
                         ),
                       ),
                       SizedBox(width: 5,),
-                      Text(
-                        user.email,
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Color(0xFF1483C2),
-                          fontFamily: 'Instrument',
-                          fontWeight: FontWeight.normal
+                      FittedBox(
+                        child: Text(
+                          user?.email ?? "-",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFF1483C2),
+                            fontFamily: 'Instrument',
+                            fontWeight: FontWeight.normal
+                          ),
                         ),
                       ),
                     ],

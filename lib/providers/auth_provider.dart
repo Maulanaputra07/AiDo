@@ -9,7 +9,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(FirebaseAuth.instance, FirebaseFirestore.instance);
 });
 
-final userProvider = StreamProvider<UserModel>((ref) {
+final userProvider = StreamProvider<UserModel?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.userStream;
 });

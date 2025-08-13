@@ -51,11 +51,14 @@ class AuthRepository {
     await _initialize();
     await _googleSignIn.initialize();
 
+    await _googleSignIn.attemptLightweightAuthentication();
+
     GoogleSignInAccount? googleUser;
 
     try{
-      await _googleSignIn.attemptLightweightAuthentication();
-      googleUser = await _googleSignIn.authenticate();
+      if(GoogleSignIn.instance.supportsAuthenticate()){
+        googleUser = await _googleSignIn.authenticate();
+      }
     } catch (e) {
       print("Google sign-in failed: $e");
       return null;
@@ -69,7 +72,32 @@ class AuthRepository {
       idToken: auth.idToken,
     );
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    print("=== Google Credential ===");
+    print("ID Token: ${auth.idToken}");
+
+    final cred = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    print("==== Firebase User ===");
+    print("UID: ${cred.user?.uid}");
+    print("Display Name: ${cred.user?.displayName}");
+    print("Email: ${cred.user?.email}");
+    print("Photo URL: ${cred.user?.photoURL}");
+
+    final user = cred.user;
+    if(user != null){
+      final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+      final docSnap = await docRef.get();
+      if (!docSnap.exists){
+        await docRef.set({
+          "uid" : user.uid,
+          "username" : user.displayName ?? "Guest",
+          "email" : user.email,
+        });
+      }
+    }
+
+    return cred;
   }
 
   Future<UserModel?> login({
@@ -111,11 +139,14 @@ class AuthRepository {
     await prefs.setString('token', token);
   }
 
-  Stream<UserModel> get userStream {
-      final uid = _auth.currentUser!.uid;
+  Stream<UserModel?> get userStream {
+    final currentUser = _auth.currentUser;
+    if(currentUser == null) {
+      return Stream.value(null);
+    }
       return _firestore
       .collection('users')
-      .doc(uid)
+      .doc(currentUser.uid)
       .snapshots()
       .map((doc) => UserModel.formMap(doc.data()!));
   }
