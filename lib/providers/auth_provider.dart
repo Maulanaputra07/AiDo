@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  print("=== authRepositoryProvider dipanggil ===");
   return AuthRepository(FirebaseAuth.instance, FirebaseFirestore.instance);
 });
 

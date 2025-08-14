@@ -23,33 +23,33 @@ void main() async {
   );
   await initializeDateFormatting('id_ID', null);
 
-  final prefs = await SharedPreferences.getInstance();
-  final String? uid = prefs.getString('uid');
+  // final prefs = await SharedPreferences.getInstance();
+  // final String? uid = prefs.getString('uid');
   // final IsLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
   FlutterNativeSplash.remove();
 
   // WidgetsFlutterBinding.ensureInitialized();
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    if(user != null){
-      print("User: ${user.email}");
-    }else{
-      print("belum login");
-    }
-  });
+  // FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  //   if(user != null){
+  //     print("User: ${user.email}");
+  //   }else{
+  //     print("belum login");
+  //   }
+  // });
 
   // WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ProviderScope(
-      child: MyApp(isLoggedIn: uid != null),
+      child: MyApp(),
     )
     );
 }
 
 class MyApp extends StatelessWidget{
-  final bool isLoggedIn;
-  const MyApp ({super.key, required this.isLoggedIn});
+  // final bool isLoggedIn;
+  const MyApp ({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget{
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFFAFAFA)
       ),
-      home: AuthWrapper(),
+      home: const AuthWrapper(),
       routes: {
         '/main' : (context) => const MainNavigation(),
         '/addtask': (context) => const AddTaskPage(),
@@ -70,7 +70,9 @@ class MyApp extends StatelessWidget{
   }
 }
 
-
+// final authStateProvider = StreamProvider<User?>((ref) {
+//   return FirebaseAuth.instance.authStateChanges();
+// });
 // class _MyAppState extends State<MyApp>{
 //   @override
 //   void initState(){

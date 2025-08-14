@@ -1,5 +1,8 @@
+import 'package:aido/providers/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rxdart/transformers.dart';
 import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -72,8 +75,8 @@ class AuthRepository {
       idToken: auth.idToken,
     );
 
-    print("=== Google Credential ===");
-    print("ID Token: ${auth.idToken}");
+    // print("=== Google Credential ===");
+    // print("ID Token: ${auth.idToken}");
 
     final cred = await FirebaseAuth.instance.signInWithCredential(credential);
 
@@ -129,8 +132,14 @@ class AuthRepository {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout(WidgetRef ref) async {
+    print("==== LOGOUT ====");
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
     await _auth.signOut();
+    await _googleSignIn.signOut();
+
+    ref.invalidate(userProvider);
   }
 
   Future<void> saveLoginData(String token) async {
@@ -140,15 +149,27 @@ class AuthRepository {
   }
 
   Stream<UserModel?> get userStream {
-    final currentUser = _auth.currentUser;
-    if(currentUser == null) {
-      return Stream.value(null);
-    }
+    print("=== userStream dipanggil ===");
+
+    return _auth.authStateChanges().switchMap((user) {
+      if(user == null){
+        print(" ==== Belum login, return null stream");
+        return Stream.value(null);
+      }
+
+      print("==== UID: ${user.uid} ====");
+
+      
       return _firestore
       .collection('users')
-      .doc(currentUser.uid)
+      .doc(user.uid)
       .snapshots()
-      .map((doc) => UserModel.formMap(doc.data()!));
+      .map((doc) {
+        print("Firestore data: ${doc.data()}");
+        return UserModel.formMap(doc.data()!);
+      });
+      // .map((doc) => UserModel.formMap(doc.data()!));
+    });
   }
 
   Future<void> updateUsername(String newUsername) async {

@@ -8,7 +8,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userProvider);
-
+    print("ProfilePage dibuka");
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
@@ -92,7 +92,7 @@ class ProfilePage extends ConsumerWidget {
                   SizedBox(height: 20,),
                   ElevatedButton(
                     onPressed: () async {
-                      await ref.read(authRepositoryProvider).logout();
+                      await ref.read(authRepositoryProvider).logout(ref);
                       if(context.mounted){
                         Navigator.pushReplacementNamed(context, '/welcome');
                       }
