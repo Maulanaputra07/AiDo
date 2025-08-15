@@ -1,0 +1,326 @@
+import 'package:aido/providers/auth_provider.dart';
+import 'package:aido/repositories/auth_repositori.dart';
+import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class RegisterPage extends ConsumerStatefulWidget{
+  const RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends ConsumerState<RegisterPage> {
+  bool isObscrued = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late final AuthRepository authRepo;
+
+  @override
+  void initState() {
+    super.initState();
+    authRepo = ref.read(authRepositoryProvider);
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1483C2), Color(0xFF1483C2), Color(0xFF1483C2), Color(0xFF1483C2), Color(0xFF9DCAE3), Color(0xFFFAFAFA)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+          )
+        ),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 200),
+                // mainAxisAlignment: MainAxisAlignment.center,
+                child:
+                  Image.asset(
+                    'assets/icons/aidoWelcome.png',
+                    width: 300,
+                  ),
+              ),
+            ),
+
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.5,
+              left: 16,
+              child: Opacity(
+                opacity: 1,
+                child: Transform.rotate(
+                  angle: 0.2,
+                  child: Image.asset(
+                    'assets/icons/oc-taking-note.png',
+                    width: 200,
+                  ),
+                )
+              ),
+            ),
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: screenHeight * 0.55,
+                decoration: BoxDecoration(
+                  color: Color(0xFFFAFAFA),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  )
+                ),
+                padding: const EdgeInsets.all(24),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Text(
+                        "Register",
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF333333),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Text(
+                      "Email",
+                      style: TextStyle(
+                        fontFamily: 'Instrument',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                        fontSize: 20
+                      ),
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFEFEFEF),
+                        // labelText: "Email",
+                        // labelStyle: TextStyle(
+                        //   color: Color(0xFF333333),
+                        //   fontWeight: FontWeight.bold,
+                        //   fontFamily: 'Instrument',
+                        //   fontSize: 25
+                        // ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        ), 
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        )
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text(
+                      "Username",
+                      style: TextStyle(
+                        fontFamily: 'Instrument',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                        fontSize: 20
+                      ),
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.text,
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFEFEFEF),
+                        // labelText: "Email",
+                        // labelStyle: TextStyle(
+                        //   color: Color(0xFF333333),
+                        //   fontWeight: FontWeight.bold,
+                        //   fontFamily: 'Instrument',
+                        //   fontSize: 25
+                        // ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        ), 
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        )
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text(
+                      "Password",
+                      style: TextStyle(
+                        fontFamily: 'Instrument',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                        fontSize: 20
+                      ),
+                    ),
+                    TextField(
+                      obscureText: isObscrued,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFEFEFEF),
+                        suffixIcon: IconButton(
+                          icon: Icon(isObscrued ? Icons.visibility_off : Icons.visibility),
+                          onPressed: (){
+                            setState(() {
+                              isObscrued = !isObscrued;
+                            });
+                          }, 
+                          ),
+                        // labelText: "Email",
+                        // labelStyle: TextStyle(
+                        //   color: Color(0xFF333333),
+                        //   fontWeight: FontWeight.bold,
+                        //   fontFamily: 'Instrument',
+                        //   fontSize: 25
+                        // ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        ), 
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(16)
+                        )
+                      ),
+                    ),
+                    SizedBox(height: 40,),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          try{
+                            final user = await authRepo.register(
+                              email: _emailController.text.trim(), 
+                              username: _usernameController.text.trim(), 
+                              password: _passwordController.text.trim()
+                            );
+                            if(user != null) {
+                              Navigator.pushReplacementNamed(context, '/main');
+                            }
+                          }catch(e) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.bottomSlide,
+                              title: "Error",
+                              desc: e.toString(),
+                              btnOkOnPress: () {},
+                              btnOkText: "Oke",
+                              btnOkColor: Color(0xFF1483C2)
+                            ).show();
+                          }
+                        }, 
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF1483C2)
+                        ),
+                        child: const Text(
+                          "Register", 
+                          style: TextStyle(
+                            fontFamily: 'Instrument',
+                            fontSize: 25,
+                            color: Color(0xFFFAFAFA),
+                            fontWeight: FontWeight.bold
+                          ),
+                          )
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          try{
+                            final userCredential = await authRepo.signInWithGoogle();
+                            if(userCredential != null){
+                              if(context.mounted){
+                                Navigator.pushReplacementNamed(context, '/main');
+                              }
+                            }else{
+                              print("error sign in");
+                              // AwesomeDialog(
+                              //   context: context,
+                              //   dialogType: DialogType.error,
+                              //   animType: AnimType.bottomSlide,
+                              //   title: "Error",
+                              //   desc: "login dengan google gagal",
+                              //   btnOkOnPress: () {},
+                              //   btnOkText: "Oke",
+                              //   btnOkColor: Color(0xFF1483C2)
+                              // ).show();
+                            }
+                          } catch (e, stackTrace) {
+                            print("Error saat login: $e");
+                            print("StackTrace: $stackTrace");
+                            if (context.mounted) {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.bottomSlide,
+                                title: "Error",
+                                desc: "Login dengan Google gagal.\n\nDetail: $e",
+                                btnOkOnPress: () {},
+                                btnOkText: "Oke",
+                                btnOkColor: const Color(0xFF1483C2),
+                              ).show();
+                            }
+                          }
+                        }, 
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/google.png',
+                              height: 24,
+                            ),
+                            const SizedBox(width: 12,),
+                            const Text(
+                              "Continue with google", 
+                              style: TextStyle(
+                                fontFamily: 'Instrument',
+                                fontSize: 25,
+                                color: Color(0xFF333333),
+                                fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ]
+                          )
+                      ),
+                    )
+                    ],
+                  )
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+    );
+  }
+}
