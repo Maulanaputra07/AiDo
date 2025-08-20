@@ -65,7 +65,6 @@ class AuthRepository {
       }
     } catch (e) {
       log("Google sign-in failed: $e");
-      log("Google sign-in failed: $e");
       return null;
     }
 

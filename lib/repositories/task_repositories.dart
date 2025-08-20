@@ -57,22 +57,9 @@ class TaskRepository {
   }
 }
 
-
   Future<void> scheduleTaskReminder(DateTime deadline, String taskName) async {
 
     final scheduledTime = deadline.subtract(Duration(days: 1));
-
-    // const AndroidNotificationDetails androidPlatformChannelSpecifics = 
-    //   AndroidNotificationDetails(
-    //     'task_channel',
-    //     'task_reminder',
-    //     channelDescription: 'Notifikasi pengingat task',
-    //     importance: Importance.high,
-    //     priority: Priority.high
-    //   );
-
-      // const NotificationDetails platformChannelSpecifics = 
-      //   NotificationDetails(android: androidPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
         0,

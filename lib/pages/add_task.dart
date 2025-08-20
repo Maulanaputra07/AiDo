@@ -1,7 +1,6 @@
 import 'dart:developer';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:aido/providers/task_provider.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -289,7 +288,26 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     backgroundColor: Color(0xFF1483C2),
                     foregroundColor: Color(0xFFFAFAFA),
                   ),
-                  onPressed: () => pickDeadlinewithTime(context), 
+                  onPressed: () async {
+                    if(await Permission.notification.isDenied){
+                      final status = await Permission.notification.request();
+
+                      if(status.isDenied){
+                        AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.info,
+                            animType: AnimType.scale,
+                            title: "Information",
+                            desc: "Aktifkan notifikasi agar bisa menerima reminder.",
+                            btnOkText: "Oke",
+                            btnOkColor: Color(0xFF1483C2)
+                        ).show();
+                        return;
+                      }
+                    }
+
+                    pickDeadlinewithTime(context);
+                  }, 
                   child: Text(
                     selectedDeadline != null ? 
                     DateFormat('dd MMM yyyy, HH:mm').format(selectedDeadline!):
