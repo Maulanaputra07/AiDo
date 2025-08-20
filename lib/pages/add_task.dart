@@ -90,7 +90,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           // const SnackBar(content: Text('Task berhasil disimpan'))
           // );
         }catch(e) {
-          log("++ gagal add task : $e");
+          print("++ gagal add task : $e");
           AwesomeDialog(
             context: context,
             dialogType: DialogType.error,
@@ -273,16 +273,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             alignment: Alignment.centerLeft,
             child: Column(
               children: [
-                // Text(
-                //   selectedDeadline != null ?
-                //   "Deadline" : "",
-                //   style: TextStyle(
-                //     fontSize: 20,
-                //     fontFamily: 'Instrument',
-                //     color: Color(0xFF1483C2),
-                //     fontWeight: FontWeight.bold
-                //   ),
-                // ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF1483C2),
@@ -307,6 +297,12 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     }
 
                     pickDeadlinewithTime(context);
+
+                    
+                    if(selectedDeadline != null) {
+                      final repo = ref.read(taskRepositoryProvider);
+                      await repo.scheduleTaskReminder(selectedDeadline!, _titleController.text.trim());
+                    }
                   }, 
                   child: Text(
                     selectedDeadline != null ? 

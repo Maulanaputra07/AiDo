@@ -1,4 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:aido/main.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import '../repositories/task_repositories.dart';
@@ -17,7 +19,15 @@ class TaskFilter extends Equatable {
 }
 
 
-final taskRepositoryProvider = Provider((ref) => TaskRepository());
+final taskRepositoryProvider = Provider<TaskRepository> ((ref) {
+  return TaskRepository();
+});
+
+final flutterLocalNotificationsPluginProvider = Provider<FlutterLocalNotificationsPlugin> ((ref) {
+  return flutterLocalNotificationsPlugin;
+});
+
+
 
 final taskStreamProvider = StreamProvider.family<List<Task>, TaskFilter>((ref, filter){
   final repo = ref.watch(taskRepositoryProvider);

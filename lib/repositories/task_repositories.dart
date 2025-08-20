@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../models/task_model.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+// import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../main.dart';
 
@@ -55,14 +55,18 @@ class TaskRepository {
   Future<void> deleteTask(String taskId) async {
     await _db.collection('tasks').doc(taskId).delete();
   }
-}
 
   Future<void> scheduleTaskReminder(DateTime deadline, String taskName) async {
-
     final scheduledTime = deadline.subtract(Duration(days: 1));
+    print("📅 Notif dijadwalkan untuk: $scheduledTime (${taskName})");
+    
+    if(scheduledTime.isBefore(DateTime.now())){
+      print("⚠️ Waktu notifikasi sudah lewat, tidak dijadwalkan");
+      return;
+    }
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
+        taskName.hashCode,
         'Pengingat Task',
         'Task "$taskName" harus selesai besok!',
         tz.TZDateTime.from(scheduledTime, tz.local),
@@ -74,7 +78,8 @@ class TaskRepository {
             priority: Priority.high
           )
         ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dateAndTime,
       );
   }
+}
