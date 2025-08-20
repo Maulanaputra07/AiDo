@@ -1,7 +1,11 @@
+import 'package:aido/models/task_model.dart';
 import 'package:aido/pages/detail_task.dart';
+import 'package:aido/repositories/task_repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/task_provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'dart:developer';
 
 class ListTaskPage extends ConsumerWidget {
   const ListTaskPage({super.key});
@@ -20,6 +24,12 @@ class MyListTaskPage extends ConsumerStatefulWidget {
 }
 
 class _MyListPageState extends ConsumerState<MyListTaskPage> {
+
+  // void _deleteTask(Task task, int index) async {
+  //   log("delete di klik");
+  //   await taskRepository.deleteTask(task.id);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,14 +47,14 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                 color: Color(0xFF1483C2)
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Consumer(
                     builder: (context, ref, _) {
-                      final taskStream = ref.watch(taskStreamProvider(false));
+                      final taskStream = ref.watch(taskStreamProvider(const TaskFilter(isTodayOnly: false, isDone: null)));
 
                       return taskStream.when(
                         data: (tasks){
@@ -74,7 +84,24 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                     MaterialPageRoute(builder: (_) => TaskDetailPage(task: task)),
                                     );
                                 },
-                                child: Container(
+                                child: Slidable(
+                                  key: ValueKey(task.id),
+                                  endActionPane: ActionPane(
+                                    motion: ScrollMotion(), 
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          ref.read(taskRepositoryProvider).deleteTask(task.id);
+                                          log("Slidable action ditekan");
+                                        },
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                        )
+                                    ]
+                                  ),
+                                  child: Container(
                                 height: 120,
                                 margin: EdgeInsets.only(bottom:12),
                                 padding: EdgeInsets.all(16),
@@ -139,6 +166,7 @@ class _MyListPageState extends ConsumerState<MyListTaskPage> {
                                       ),
                                 ),
                               ),
+                                )
                               );
                             }
                           );

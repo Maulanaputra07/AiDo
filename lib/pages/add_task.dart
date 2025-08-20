@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aido/providers/task_provider.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,12 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
         title: value, 
         isDone: _subTasks[index].isDone,
         );
+    });
+  }
+
+  void _deleteSubtask(int index){
+    setState(() {
+      _subTasks.removeAt(index);
     });
   }
 
@@ -83,6 +91,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           // const SnackBar(content: Text('Task berhasil disimpan'))
           // );
         }catch(e) {
+          log("++ gagal add task : $e");
           AwesomeDialog(
             context: context,
             dialogType: DialogType.error,
@@ -179,6 +188,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: const Text(
         "Add Task",
         style: TextStyle(
@@ -238,8 +249,9 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Color(0xFFF6F6F6),
-                labelText: 'Description',
-                labelStyle: TextStyle(
+                // labelText: 'Description',
+                hintText: 'Deskripsi',
+                hintStyle: TextStyle(
                   color: Color(0xFF1483C2),
                   fontWeight: FontWeight.bold,
                   fontFamily: "Instrument",
@@ -255,7 +267,44 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 10),
+
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: [
+                // Text(
+                //   selectedDeadline != null ?
+                //   "Deadline" : "",
+                //   style: TextStyle(
+                //     fontSize: 20,
+                //     fontFamily: 'Instrument',
+                //     color: Color(0xFF1483C2),
+                //     fontWeight: FontWeight.bold
+                //   ),
+                // ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1483C2),
+                    foregroundColor: Color(0xFFFAFAFA),
+                  ),
+                  onPressed: () => pickDeadlinewithTime(context), 
+                  child: Text(
+                    selectedDeadline != null ? 
+                    DateFormat('dd MMM yyyy, HH:mm').format(selectedDeadline!):
+                    "pilih deadline",
+                    style: TextStyle(
+                      fontSize: 20
+                    ),
+                  )
+                ),
+              ],
+            ),
+          ),
+
             const SizedBox(height: 20),
+
             Text(
               "Sub Task",
               style: TextStyle(
@@ -266,64 +315,55 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
               ),
               textAlign: TextAlign.start,
             ),
-            const SizedBox(height: 20),
-
-            ..._subTasks.asMap().entries.map((entry) {
-              final index = entry.key;
-              final subTask = entry.value;
-
-              return Row(
-                children: [
-                  Checkbox(
-                  value: subTask.isDone, 
-                  onChanged: (value) => _toggleSubTasksDone(index, value),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        hintText: "Sub-task 1",
-                        hintStyle: TextStyle(color: Color(0xFFC2C6CE))
-                      ),
-                      onChanged: (value) => _updateSubtasksTitle(index, value),
-                    ),
-                  ),
-                ]
-              );
-            }).toList(),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(onPressed: _addSubTask, icon: const Icon(Icons.add, color: Color(0xFF1483C2),), label: const Text('Add Sub-task', style: TextStyle(color: Color(0xFF1483C2)))),
-            ),
 
             const SizedBox(height: 20),
 
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF1483C2),
-                      foregroundColor: Color(0xFFFAFAFA),
-                    ),
-                    onPressed: () => pickDeadlinewithTime(context), 
-                    child: const Text("pilih deadline!")
-                  ),
-                  SizedBox(height: 10,),
-                  if(selectedDeadline != null)
-                    Text(
-                      'Deadline : ${DateFormat('dd MMM yyyy, HH:mm').format(selectedDeadline!)}',
-                      style: const TextStyle(
-                        fontSize: 15
+            Expanded(
+              child: ListView.builder(
+                itemCount: _subTasks.length,
+                itemBuilder: (context, index){
+                  final subTask = _subTasks[index];
+
+                  return Row(
+                    children: [
+                      Checkbox(
+                        value: subTask.isDone, 
+                        onChanged: (value) => _toggleSubTasksDone(index, value)
                       ),
-                    )
-                ],
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "Subtask ${index + 1}",
+                            hintStyle: const TextStyle(color: Color(0xFFC2C6CE))
+                          ),
+                          onChanged: (value) => _updateSubtasksTitle(index, value),
+                        ) 
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.grey),
+                        onPressed: () => _deleteSubtask(index),
+                      )
+                    ]
+                  );
+                }
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
+            Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton.icon(onPressed: _addSubTask, icon: const Icon(Icons.add, color: Color(0xFF1483C2),), label: const Text('Add Sub-task', style: TextStyle(color: Color(0xFF1483C2)))),
+                  SizedBox(width: 15,),
+                  
+                ],  
+              )
+            ),
+
+            const SizedBox(height: 10),
 
             ElevatedButton(
                 onPressed: _isLoading ? null : _saveTask,

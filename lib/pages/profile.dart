@@ -1,6 +1,7 @@
 import 'package:aido/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage ({super.key});
@@ -8,7 +9,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userProvider);
-    print("ProfilePage dibuka");
+    log("ProfilePage dibuka");
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(

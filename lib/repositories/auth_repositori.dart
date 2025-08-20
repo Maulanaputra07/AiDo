@@ -64,7 +64,7 @@ class AuthRepository {
         googleUser = await _googleSignIn.authenticate();
       }
     } catch (e) {
-      print("Google sign-in failed: $e");
+      log("Google sign-in failed: $e");
       log("Google sign-in failed: $e");
       return null;
     }
@@ -77,16 +77,16 @@ class AuthRepository {
       idToken: auth.idToken,
     );
 
-    // print("=== Google Credential ===");
-    // print("ID Token: ${auth.idToken}");
+    // log("=== Google Credential ===");
+    // log("ID Token: ${auth.idToken}");
 
     final cred = await FirebaseAuth.instance.signInWithCredential(credential);
 
-    print("==== Firebase User ===");
-    print("UID: ${cred.user?.uid}");
-    print("Display Name: ${cred.user?.displayName}");
-    print("Email: ${cred.user?.email}");
-    print("Photo URL: ${cred.user?.photoURL}");
+    log("==== Firebase User ===");
+    log("UID: ${cred.user?.uid}");
+    log("Display Name: ${cred.user?.displayName}");
+    log("Email: ${cred.user?.email}");
+    log("Photo URL: ${cred.user?.photoURL}");
 
     final user = cred.user;
     if(user != null){
@@ -135,7 +135,7 @@ class AuthRepository {
   }
 
   Future<void> logout(WidgetRef ref) async {
-    print("==== LOGOUT ====");
+    log("==== LOGOUT ====");
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     await _auth.signOut();
@@ -151,15 +151,15 @@ class AuthRepository {
   }
 
   Stream<UserModel?> get userStream {
-    print("=== userStream dipanggil ===");
+    log("=== userStream dipanggil ===");
 
     return _auth.authStateChanges().switchMap((user) {
       if(user == null){
-        print(" ==== Belum login, return null stream");
+        log(" ==== Belum login, return null stream");
         return Stream.value(null);
       }
 
-      print("==== UID: ${user.uid} ====");
+      log("==== UID: ${user.uid} ====");
 
       
       return _firestore
@@ -167,7 +167,7 @@ class AuthRepository {
       .doc(user.uid)
       .snapshots()
       .map((doc) {
-        print("Firestore data: ${doc.data()}");
+        log("Firestore data: ${doc.data()}");
         return UserModel.formMap(doc.data()!);
       });
       // .map((doc) => UserModel.formMap(doc.data()!));

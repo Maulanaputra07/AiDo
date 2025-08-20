@@ -108,30 +108,38 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   color: Color(0xFF333333)
                                 ),
                               ),
-                              SizedBox(height: 8),
-                              Align(
-                                alignment: Alignment.center,
-                                child:  Consumer(builder: (context, ref, _) {
-                                final taskStream= ref.watch(taskStreamProvider(false));
+                              SizedBox(height: 2),
+                              Expanded(
+                                child: Center(
+                                  child: Consumer(builder: (context, ref, _) {
+                                    final taskStream= ref.watch(taskStreamProvider(const TaskFilter(isTodayOnly: false, isDone: false)));
 
-                                return taskStream.when(
-                                  data: (tasks) => Text("${tasks.length}",
-                                  style: const TextStyle(
-                                    fontSize: 27,
-                                    fontWeight: FontWeight.bold,
-                                    color:  Color(0xFFFAFAFA)
-                                    ),
-                                  ),
-                                  loading: () => const Text(
-                                    "...",
-                                    style: TextStyle(fontSize: 24),
-                                  ),
-                                  error: (err, stack) {
-                                    // print("error : ${err}");
-                                    return Text("!", style: TextStyle(color: Colors.red));
-                                  }
-                                );
-                              }),
+                                    return taskStream.when(
+                                      data: (tasks) => 
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: 
+                                          Text(
+                                          "${tasks.length}",
+                                          style: const TextStyle(
+                                            fontSize: 80,
+                                            fontWeight: FontWeight.bold,
+                                            color:  Color(0xFFFAFAFA)
+                                            ),
+                                          ),
+                                      ),
+                                      loading: () => const Text(
+                                        "...",
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                      error: (err, stack) {
+                                        // print("error : ${err}");
+                                        return Text("!", style: TextStyle(color: Colors.red));
+                                      }
+                                    );
+                                  },
+                                ) 
+                              )
                               ),
                             ],
                           ),
@@ -165,18 +173,38 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   fontWeight: FontWeight.w900
                                 ),
                               ),
-                              SizedBox(height: 8),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "0",
-                                  style: TextStyle(
-                                    color: Color(0xFFFAFAFA),
-                                    fontSize: 27,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                )
-                              ),
+                              SizedBox(height: 2),
+                              Expanded(
+                                child: Center(
+                                  child: Consumer(builder: (context, ref, _) {
+                                    final taskStream= ref.watch(taskStreamProvider(const TaskFilter(isTodayOnly: false, isDone: true)));
+
+                                    return taskStream.when(
+                                      data: (tasks) => 
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: 
+                                          Text(
+                                          "${tasks.length}",
+                                          style: const TextStyle(
+                                            fontSize: 80,
+                                            fontWeight: FontWeight.bold,
+                                            color:  Color(0xFFFAFAFA)
+                                            ),
+                                          ),
+                                      ),
+                                      loading: () => const Text(
+                                        "...",
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                      error: (err, stack) {
+                                        // print("error : ${err}");
+                                        return Text("!", style: TextStyle(color: Colors.red));
+                                      }
+                                    );
+                                  }),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -197,6 +225,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                           fontFamily: "Instrument",
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
+                          color: Color(0xFF333333)
                         ),
                       ),
 
@@ -204,7 +233,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
                       Consumer(
                             builder: (context, ref, _){
-                              final taskStream = ref.watch(taskStreamProvider(true));
+                              final taskStream = ref.watch(taskStreamProvider(const TaskFilter(isTodayOnly: true, isDone: null)));
 
                               return taskStream.when(
                                 data: (tasks){
@@ -326,26 +355,27 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               );
                             },
                           )
-                      //         // container ini akan saya gunakan untuk jam saat ini
-                      //         height: 80,
-                      //         width: 500,
-                      //         padding: EdgeInsets.all(16),
-                      //         decoration: BoxDecoration(
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.circular(12),
-                      //           border: Border.all(color: Colors.grey),
-                      //         ),
-                      //         child: Center(
-                      //           child: RealTimeClock(),
-                      //         )
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
 
+                SizedBox(height: 16,),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      Text("Collab task", 
+                        style: TextStyle(
+                          fontFamily: "Instrument",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: Color(0xFF333333)
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

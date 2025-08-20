@@ -3,6 +3,7 @@ import 'package:aido/providers/task_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import 'package:intl/intl.dart';
+import 'dart:developer';
 
 class TaskDetailPage extends StatefulWidget{
   final Task task;
@@ -17,13 +18,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   @override
   Widget build(BuildContext context) {
     final timeLeft = widget.task.timeLeft;
-    print("timeleft: ${widget.task.timeLeft}");
-    print("isFailed: ${widget.task.isFailed}");
+    log("timeleft: ${widget.task.timeLeft}");
+    log("isFailed: ${widget.task.isFailed}");
 
     String formatTimeLeft(Duration? timeLeft){
       if(timeLeft == null){
         return "Tidak ada deadline";
       } else if(timeLeft.isNegative) {
+        if (timeLeft.abs().inHours > 24){
+          return "Terlambat ${timeLeft.abs().inDays} hari";
+        }
         return "Terlambat ${timeLeft.abs().inHours} jam";
       } else if(timeLeft.inDays > 0) {
         return "${timeLeft.inDays} hari lagi";

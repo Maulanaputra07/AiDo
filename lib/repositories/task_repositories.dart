@@ -51,7 +51,12 @@ class TaskRepository {
       'isDone' : allDone
     });
   }
+  
+  Future<void> deleteTask(String taskId) async {
+    await _db.collection('tasks').doc(taskId).delete();
+  }
 }
+
 
   Future<void> scheduleTaskReminder(DateTime deadline, String taskName) async {
 
