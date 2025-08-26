@@ -58,6 +58,7 @@ class TaskRepository {
 
   Future<void> scheduleTaskReminder(DateTime deadline, String taskName) async {
     final scheduledTime = deadline.subtract(Duration(days: 1));
+    // final scheduledTime = DateTime.now().add(const Duration(seconds: 5));
     print("📅 Notif dijadwalkan untuk: $scheduledTime (${taskName})");
     
     if(scheduledTime.isBefore(DateTime.now())){
@@ -65,21 +66,26 @@ class TaskRepository {
       return;
     }
 
+    final granted = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+    print("🔔 Permission granted: $granted");
+
       await flutterLocalNotificationsPlugin.zonedSchedule(
         taskName.hashCode,
         'Pengingat Task',
-        'Task "$taskName" harus selesai besok!',
+        'Task $taskName harus selesai besok!',
         tz.TZDateTime.from(scheduledTime, tz.local),
         const NotificationDetails(
           android: AndroidNotificationDetails(
             'task_channel', 
             'Task Reminder',
-            importance: Importance.high,
+            importance: Importance.max,
             priority: Priority.high
           )
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.dateAndTime,
       );
+
+      final pending = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+      print("📋 Pending notifikasi: ${pending.map((e) => "${e.id} - ${e.title}").toList()}");
   }
 }

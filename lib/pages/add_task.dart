@@ -6,6 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import '../main.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+
 
 class AddTaskPage extends ConsumerStatefulWidget{
   const AddTaskPage({super.key});
@@ -48,6 +53,48 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
       _subTasks[index] = SubTask(title: _subTasks[index].title, isDone: value ?? false);
     });
   }
+
+  // void testNotification() async {
+  //   final scheduledTime = DateTime.now().add(const Duration(seconds: 5));
+
+  //   final granted = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+  //   print("🔔 Permission granted: $granted");
+
+  //   await flutterLocalNotificationsPlugin.zonedSchedule(
+  //     0,
+  //     'Test Notifikasi cuy',
+  //     'Ini muncul 5 detik setelah klik',
+  //     tz.TZDateTime.from(scheduledTime, tz.local),
+  //     const NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         'task_channel_notification_1',
+  //         'Task Reminder',
+  //         channelDescription: 'Test channel',
+  //         importance: Importance.max,
+  //         priority: Priority.high,
+  //       ),
+  //     ),
+  //     androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+  //   );
+
+  //   // await flutterLocalNotificationsPlugin.show(
+  //   //   0,
+  //   //   'Test Notifikasi',
+  //   //   'Ini muncul 5 detik setelah klik',
+  //   //   const NotificationDetails(
+  //   //     android: AndroidNotificationDetails(
+  //   //       'instant_notification_channel_id', 
+  //   //       'Instant Notifications',
+  //   //       channelDescription: 'Instant notification channel',
+  //   //       importance: Importance.max,
+  //   //       priority: Priority.high
+  //   //     )
+  //   //   ),
+  //   // );
+
+  //   final pending = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+  //   print("📋 Pending notifikasi: ${pending.map((e) => "${e.id} - ${e.title}").toList()}");
+  // }
 
   Future<void> _saveTask() async{
       final title = _titleController.text.trim();
@@ -381,6 +428,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
             ElevatedButton(
                 onPressed: _isLoading ? null : _saveTask,
+                // onPressed: _isLoading ? null : testNotification,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF1483C2),
                   foregroundColor: Color(0xFFFAFAFA),
