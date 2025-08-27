@@ -1,6 +1,4 @@
-import 'package:aido/models/task_model.dart';
 import 'package:aido/pages/detail_task.dart';
-import 'package:aido/repositories/task_repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/task_provider.dart';

@@ -1,6 +1,5 @@
 import 'package:aido/providers/auth_provider.dart';
 import 'package:aido/repositories/auth_repositori.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -194,7 +193,7 @@ class _LoginPageState extends ConsumerState<LoginPage>{
                         child: OutlinedButton(
                           onPressed: () async {
                             try{
-                              final UserCredential = authRepository.signInWithGoogle();
+                              authRepository.signInWithGoogle();
                                 if(context.mounted){
                                   Navigator.pushReplacementNamed(context, '/main');
                                 }

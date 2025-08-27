@@ -2,6 +2,7 @@ import 'package:aido/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer';
+import '../components/custom_toggle.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage ({super.key});
@@ -87,6 +88,27 @@ class ProfilePage extends ConsumerWidget {
                             fontWeight: FontWeight.normal
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Notif: ",
+                          style: TextStyle(
+                          fontSize: 25,
+                          color: Color(0xFF1483C2),
+                          fontFamily: 'Instrument',
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      CustomToggle(
+                        onChanged: (value) {
+                          print("toggle value : $value");
+                        }
                       ),
                     ],
                   ),

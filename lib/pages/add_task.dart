@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:aido/providers/task_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import '../main.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-
 
 class AddTaskPage extends ConsumerStatefulWidget{
   const AddTaskPage({super.key});
@@ -54,48 +48,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
     });
   }
 
-  // void testNotification() async {
-  //   final scheduledTime = DateTime.now().add(const Duration(seconds: 5));
-
-  //   final granted = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
-  //   print("🔔 Permission granted: $granted");
-
-  //   await flutterLocalNotificationsPlugin.zonedSchedule(
-  //     0,
-  //     'Test Notifikasi cuy',
-  //     'Ini muncul 5 detik setelah klik',
-  //     tz.TZDateTime.from(scheduledTime, tz.local),
-  //     const NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         'task_channel_notification_1',
-  //         'Task Reminder',
-  //         channelDescription: 'Test channel',
-  //         importance: Importance.max,
-  //         priority: Priority.high,
-  //       ),
-  //     ),
-  //     androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-  //   );
-
-  //   // await flutterLocalNotificationsPlugin.show(
-  //   //   0,
-  //   //   'Test Notifikasi',
-  //   //   'Ini muncul 5 detik setelah klik',
-  //   //   const NotificationDetails(
-  //   //     android: AndroidNotificationDetails(
-  //   //       'instant_notification_channel_id', 
-  //   //       'Instant Notifications',
-  //   //       channelDescription: 'Instant notification channel',
-  //   //       importance: Importance.max,
-  //   //       priority: Priority.high
-  //   //     )
-  //   //   ),
-  //   // );
-
-  //   final pending = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-  //   print("📋 Pending notifikasi: ${pending.map((e) => "${e.id} - ${e.title}").toList()}");
-  // }
-
   Future<void> _saveTask() async{
       final title = _titleController.text.trim();
       final desc = _descriptionController.text.trim();
@@ -115,7 +67,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           createdAt: DateTime.now(),
         );
 
-
         try{
           final taskRepo = ref.read(taskRepositoryProvider);
           await taskRepo.addTask(newTask);
@@ -133,9 +84,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             btnOkText: "Oke",
             btnOkColor: Color(0xFF1483C2)
         ).show();
-          // ScaffoldMessenger.of(context).showSnackBar(
-          // const SnackBar(content: Text('Task berhasil disimpan'))
-          // );
         }catch(e) {
           print("++ gagal add task : $e");
           AwesomeDialog(
@@ -148,9 +96,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             btnOkText: "Oke",
             btnOkColor: Color(0xFF1483C2)
         ).show();
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text("Gagal menambahkan task: $e"))
-          // );
         }finally {
           setState(() {
             _isLoading = false;
@@ -344,7 +289,6 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     }
 
                     pickDeadlinewithTime(context);
-
                     
                     if(selectedDeadline != null) {
                       final repo = ref.read(taskRepositoryProvider);

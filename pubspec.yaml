@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  animated_toggle_switch: ^0.8.5
   awesome_dialog: ^3.2.1
   cloud_firestore: ^6.0.0
   cupertino_icons: ^1.0.8
