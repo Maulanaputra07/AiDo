@@ -2,6 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class CustomToggle extends StatefulWidget {
@@ -19,12 +20,19 @@ class CustomToggle extends StatefulWidget {
 }
 
 class _CustomToggleState extends State<CustomToggle> {
-  late bool isOn;
+  late bool isOn = false;
 
   @override
   void initState() {
     super.initState();
-    isOn = widget.initialValue;
+    _loadSwitchState();
+  }
+
+  Future<void> _loadSwitchState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isOn = prefs.getBool('isOn') ?? false;
+    });
   }
 
   Future<void> _handleToggle(bool value) async {
@@ -49,6 +57,9 @@ class _CustomToggleState extends State<CustomToggle> {
       }
     }
 
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isOn', value);
+
     setState(() => isOn = value);
   }
 
@@ -56,8 +67,8 @@ class _CustomToggleState extends State<CustomToggle> {
   Widget build(BuildContext context) {
     return AnimatedToggleSwitch<bool>.dual(
       current: isOn, 
-      first: false, 
-      second: true,
+      first: true, 
+      second: false,
       spacing: 25.0,
       height: 50,
       onChanged: _handleToggle,

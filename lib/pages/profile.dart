@@ -36,104 +36,107 @@ class ProfilePage extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Username: ",
-                          style: TextStyle(
-                          fontSize: 25,
-                          color: Color(0xFF1483C2),
-                          fontFamily: 'Instrument',
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      Text(
-                        user?.username ?? "Guest",
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Color(0xFF1483C2),
-                          fontFamily: 'Instrument',
-                          fontWeight: FontWeight.normal
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    Icons.person,
+                    size: 150,
+                    color: Colors.grey,
                   ),
-                  SizedBox(height: 20,),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Email: ",
-                          style: TextStyle(
-                          fontSize: 25,
-                          color: Color(0xFF1483C2),
-                          fontFamily: 'Instrument',
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      FittedBox(
-                        child: Text(
-                          user?.email ?? "-",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xFF1483C2),
-                            fontFamily: 'Instrument',
-                            fontWeight: FontWeight.normal
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    user?.username ?? "Guest",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Color(0xFF1483C2),
+                      fontFamily: 'Instrument',
+                      fontWeight: FontWeight.w900
+                    ),
                   ),
-                  SizedBox(height: 20,),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Notif: ",
-                          style: TextStyle(
-                          fontSize: 25,
-                          color: Color(0xFF1483C2),
-                          fontFamily: 'Instrument',
-                          fontWeight: FontWeight.bold
+                  SizedBox(height: 50,),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Email: ",
+                                style: TextStyle(
+                                fontSize: 25,
+                                color: Color(0xFF1483C2),
+                                fontFamily: 'Instrument',
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+                            FittedBox(
+                              child: Text(
+                                user?.email ?? "-",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xFF1483C2),
+                                  fontFamily: 'Instrument',
+                                  fontWeight: FontWeight.normal
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 10,),
-                      CustomToggle(
-                        onChanged: (value) {
-                          print("toggle value : $value");
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Notif: ",
+                                style: TextStyle(
+                                fontSize: 25,
+                                color: Color(0xFF1483C2),
+                                fontFamily: 'Instrument',
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            CustomToggle(
+                              onChanged: (value) {
+                                print("toggle value : $value");
+                              }
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 50,),
+                  SizedBox(
+                    width: 300,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await ref.read(authRepositoryProvider).logout(ref);
+                        if(context.mounted){
+                          Navigator.pushReplacementNamed(context, '/welcome');
                         }
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await ref.read(authRepositoryProvider).logout(ref);
-                      if(context.mounted){
-                        Navigator.pushReplacementNamed(context, '/welcome');
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF1483C2)
-                    ), 
-                    child: const Text(
-                      "Logout",
-                      style: TextStyle(
-                        color: Color(0xFFFAFAFA),
-                        fontSize: 20,
-                      ),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(217, 228, 54, 54)
+                      ), 
+                      child: const Text(
+                        "Logout",
+                        style: TextStyle(
+                          color: Color(0xFFFAFAFA),
+                          fontSize: 20,
+                        ),
+                      )
                     )
-                  )
+                  ),
                 ],
               ),
-              ),
+            ),
             ),
           ],
         ), 
