@@ -6,6 +6,8 @@ class Task {
   final String desc;
   final List<SubTask> subTasks;
   final bool isDone;
+  final String ownerUid;
+  final List<String> collaborators;
   final DateTime? deadline;
   final DateTime createdAt;
 
@@ -15,6 +17,8 @@ class Task {
     required this.desc,
     this.subTasks = const [],
     required this.isDone,
+    required this.ownerUid,
+    this.collaborators = const [],
     this.deadline,
     required this.createdAt,
   });
@@ -30,10 +34,6 @@ class Task {
     return deadline!.difference(DateTime.now());
   }
 
-  // bool get isOverdue {
-  //   if (deadline == null) return false;
-  //   return DateTime.now().isAfter(deadline!) && !isDone;
-  // }
 
   bool get isFailed {
     if (deadline == null) return false;
@@ -50,6 +50,8 @@ class Task {
         .map((e) => SubTask.fromMap(e as Map<String, dynamic>))
         .toList(),
       isDone: data['isDone'] ?? false,
+      ownerUid: data['ownerUid'] ?? '',
+      collaborators: List<String>.from(data['collaborators'] ?? []),
       deadline: data['deadline'] != null ? (data['deadline'] as Timestamp).toDate() : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );

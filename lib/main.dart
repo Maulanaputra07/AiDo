@@ -3,7 +3,6 @@ import 'package:aido/pages/add_task.dart';
 import 'package:aido/pages/auth/login_page.dart';
 import 'package:aido/pages/auth/register_page.dart';
 import 'package:aido/pages/auth_wrapper.dart';
-// import 'package:aido/pages/home.dart';
 import 'package:aido/pages/welcome/welcome_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -38,23 +37,7 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-  // final prefs = await SharedPreferences.getInstance();
-  // final String? uid = prefs.getString('uid');
-  // final IsLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
   FlutterNativeSplash.remove();
-
-  // WidgetsFlutterBinding.ensureInitialized();
-
-  // FirebaseAuth.instance.authStateChanges().listen((User? user) {
-  //   if(user != null){
-  //     print("User: ${user.email}");
-  //   }else{
-  //     print("belum login");
-  //   }
-  // });
-
-  // WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ProviderScope(
       child: MyApp(),

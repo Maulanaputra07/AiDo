@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../models/task_model.dart';
 // import 'package:timezone/data/latest_all.dart' as tz;
@@ -29,10 +30,15 @@ class TaskRepository {
   }
 
   Future<void> addTask(Task task) async{
+    final user = FirebaseAuth.instance.currentUser;
+    if(user == null ) return;
+
     await _db.collection('tasks').add({
       'title' : task.title,
       'desc' : task.desc,
       'isDone' : task.isDone,
+      'ownerUid' : user.uid,
+      'collaborators' : <String>[],
       'deadline' : task.deadline != null ? Timestamp.fromDate(task.deadline!) : null,
       'subTasks' : task.subTasks.map((sub) => sub.toMap()).toList(),
       'createdAt' : Timestamp.fromDate(task.createdAt),
@@ -87,5 +93,28 @@ class TaskRepository {
 
       final pending = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
       print("📋 Pending notifikasi: ${pending.map((e) => "${e.id} - ${e.title}").toList()}");
+  }
+
+  Future<void> addCollaborators(String taskId, String userId) async {
+    await FirebaseFirestore.instance.collection('tasks').doc(taskId).update({
+      'collaborators' : FieldValue.arrayUnion([userId])
+    });
+  }
+
+  Future<void> removeCollaborators(String taskId, String userId) async {
+    await FirebaseFirestore.instance.collection('tasks').doc(taskId).update({
+      'collaborators' : FieldValue.arrayRemove([userId])
+    });
+  }
+
+  Future<String?> getUidByUsername(String username) async {
+    final snapshot = await FirebaseFirestore.instance
+    .collection('users')
+    .where('username', isEqualTo: username)
+    .limit(1)
+    .get();
+
+    if (snapshot.docs.isEmpty) return null;
+    return snapshot.docs.first.id;
   }
 }

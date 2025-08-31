@@ -1,3 +1,4 @@
+import 'package:aido/components/add_collaborator_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:aido/providers/task_provider.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class AddTaskPage extends ConsumerStatefulWidget{
   const AddTaskPage({super.key});
@@ -51,6 +54,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   Future<void> _saveTask() async{
       final title = _titleController.text.trim();
       final desc = _descriptionController.text.trim();
+      final user = FirebaseAuth.instance.currentUser!;
 
       if(title.isNotEmpty && desc.isNotEmpty){
         setState(() {
@@ -63,6 +67,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           desc: desc,
           subTasks: _subTasks,
           isDone: _isDone,
+          ownerUid: user.uid,
           deadline: selectedDeadline,
           createdAt: DateTime.now(),
         );
@@ -263,7 +268,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
           Align(
             alignment: Alignment.centerLeft,
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -304,6 +310,32 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     ),
                   )
                 ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1483C2),
+                    foregroundColor: Color(0xFFFAFAFA),
+                  ),
+                  onPressed: () async {
+                    final taskRepo = ref.read(taskRepositoryProvider);
+                    final userCollab = await showDialog<String>(
+                      context: context,
+                      builder: (ctx) => const AddCollaboratorDialog()
+                    );
+
+                    if(userCollab != null){
+                      final uid = await taskRepo.getUidByUsername(userCollab);
+                      // if(uid != null){
+                      //   await taskRepo.addCollaborators(task.id, uid);
+                      // }
+                    }
+                  }, 
+                  child: Text(
+                    "Tambah Collaborator",
+                    style: TextStyle(
+                      fontSize: 20
+                    ),
+                  )
+                )
               ],
             ),
           ),
