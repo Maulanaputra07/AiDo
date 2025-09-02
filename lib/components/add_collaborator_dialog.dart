@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
+// import 'dart:developer';
 
 class AddCollaboratorDialog extends StatefulWidget {
   const AddCollaboratorDialog({super.key});
@@ -65,8 +65,8 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
             if(!_isLoading && _result.isNotEmpty)
               Flexible(
                 child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  // shrinkWrap: true,
+                  // physics: NeverScrollableScrollPhysics(),
                   itemCount: _result.length,
                   itemBuilder: (context, i){
                     final user = _result[i].data() as Map<String, dynamic>;
@@ -77,6 +77,7 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
                       title: Text(user['username'] ?? ''),
                       subtitle: Text(user['email'] ?? ''),
                       onTap: () {
+                        print("klik user ${user['username']}");
                         Navigator.pop(context, user['username']);
                       },
                     );

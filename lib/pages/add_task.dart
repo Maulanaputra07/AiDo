@@ -20,6 +20,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final List<SubTask> _subTasks = [];
+  List<String> selectedCollaborators = [];
   final bool _isDone = false;
   bool _isLoading = false;
   DateTime? selectedDeadline;
@@ -74,7 +75,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
         try{
           final taskRepo = ref.read(taskRepositoryProvider);
-          await taskRepo.addTask(newTask);
+          await taskRepo.addTask(newTask, collaborators: selectedCollaborators);
           
           if(!mounted) return;
           AwesomeDialog(
@@ -118,6 +119,26 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           btnOkColor: Color(0xFF1483C2)
         ).show();
       }
+  }
+
+  void _openCollaboratorsDialog() async {
+    final taskRepo = ref.read(taskRepositoryProvider);
+    final userCollab = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AddCollaboratorDialog()
+    );
+
+    print("user : $userCollab");
+    
+    if(userCollab != null){
+      final uid = await taskRepo.getUidByUsername(userCollab);
+      print("UID collab: $uid");
+      if(uid != null && !selectedCollaborators.contains(uid)){
+        setState(() {
+          selectedCollaborators.add(uid);
+        });
+      }
+    }
   }
 
   Future<void> pickDeadlinewithTime(BuildContext context) async {
@@ -315,32 +336,23 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     backgroundColor: Color(0xFF1483C2),
                     foregroundColor: Color(0xFFFAFAFA),
                   ),
-                  onPressed: () async {
-                    final taskRepo = ref.read(taskRepositoryProvider);
-                    final userCollab = await showDialog<String>(
-                      context: context,
-                      builder: (ctx) => const AddCollaboratorDialog()
-                    );
-
-                    if(userCollab != null){
-                      final uid = await taskRepo.getUidByUsername(userCollab);
-                      // if(uid != null){
-                      //   await taskRepo.addCollaborators(task.id, uid);
-                      // }
-                    }
-                  }, 
+                  onPressed: _openCollaboratorsDialog, 
                   child: Text(
                     "Tambah Collaborator",
                     style: TextStyle(
                       fontSize: 20
                     ),
                   )
-                )
+                ),
               ],
             ),
           ),
 
             const SizedBox(height: 20),
+
+            Wrap(
+              children: selectedCollaborators.map((uid) => Chip(label: Text(uid))).toList()
+            ),
 
             Text(
               "Sub Task",

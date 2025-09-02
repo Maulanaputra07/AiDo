@@ -29,7 +29,7 @@ class TaskRepository {
       .map((snapshot) => snapshot.docs.map((doc) => Task.fromDoc(doc)).toList());
   }
 
-  Future<void> addTask(Task task) async{
+  Future<void> addTask(Task task, {List<String> collaborators = const []}) async{
     final user = FirebaseAuth.instance.currentUser;
     if(user == null ) return;
 
@@ -38,7 +38,7 @@ class TaskRepository {
       'desc' : task.desc,
       'isDone' : task.isDone,
       'ownerUid' : user.uid,
-      'collaborators' : <String>[],
+      'collaborators' : collaborators,
       'deadline' : task.deadline != null ? Timestamp.fromDate(task.deadline!) : null,
       'subTasks' : task.subTasks.map((sub) => sub.toMap()).toList(),
       'createdAt' : Timestamp.fromDate(task.createdAt),
