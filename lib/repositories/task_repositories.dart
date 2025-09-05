@@ -117,4 +117,10 @@ class TaskRepository {
     if (snapshot.docs.isEmpty) return null;
     return snapshot.docs.first.id;
   }
+
+  Future<List<Map<String, dynamic>>> getCollaboratorsData(List<String> uids) async {
+    if (uids.isEmpty) return [];
+    final snapShot = await _db.collection("users").where(FieldPath.documentId, whereIn: uids).get();
+    return snapShot.docs.map((doc) => doc.data()).toList();
+  }
 }

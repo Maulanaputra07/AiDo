@@ -348,11 +348,29 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
             ),
           ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
             Wrap(
-              children: selectedCollaborators.map((uid) => Chip(label: Text(uid))).toList()
+              children: selectedCollaborators.map((uid) {
+                final collabAsync = ref.watch(collaboratorsProvider(selectedCollaborators));
+                return collabAsync.when(
+                    data: (collabs) {
+                      if (collabs.isEmpty) {
+                        return const Chip(label: Text("Unknown collab"));
+                      }
+                      final collab = collabs.first;
+                      return Chip(
+                        backgroundColor: Color(0xFFFAFAFA),
+                        label: Text("${collab['username']} (${collab['email']})", style: TextStyle(fontSize: 20),)
+                      );
+                    }, 
+                    loading: () => const Chip(label: Text("loading")),
+                    error: (e, _) => Chip(label: Text("Error"),), 
+                  );
+              }).toList()
             ),
+
+          const SizedBox(height: 20),
 
             Text(
               "Sub Task",

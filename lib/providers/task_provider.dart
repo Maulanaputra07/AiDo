@@ -27,8 +27,6 @@ final flutterLocalNotificationsPluginProvider = Provider<FlutterLocalNotificatio
   return flutterLocalNotificationsPlugin;
 });
 
-
-
 final taskStreamProvider = StreamProvider.family<List<Task>, TaskFilter>((ref, filter){
   final repo = ref.watch(taskRepositoryProvider);
   final stream = filter.isTodayOnly ? repo.getTodayTask() : repo.getAllTask();
@@ -44,3 +42,10 @@ final taskStreamProvider = StreamProvider.family<List<Task>, TaskFilter>((ref, f
         return filtered;
       });
 });
+
+final collaboratorsProvider = FutureProvider.family<List<Map<String, dynamic>>, List<String>>(
+  (ref, uids) async {
+    final repo = ref.read(taskRepositoryProvider);
+    return repo.getCollaboratorsData(uids);
+  }
+);
